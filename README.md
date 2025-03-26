@@ -126,9 +126,19 @@ Section "InputClass"
 EndSection
 ~~~~
 
-Save and reboot.
+Save and reboot/logout and back in.
 
-### 5.3. Download/Clone This Project
+### 5.3. Add google-chrome ppa repository
+
+~~~~bash
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+
+sudo apt update
+~~~~
+
+### 5.4. Download/Clone This Project
 Download the .zip, or clone the git repository:
 1. Install Git if needed:
 
@@ -142,23 +152,45 @@ sudo apt install git
 git clone <URL-of-this-project>
 ~~~~
 
-### 5.4. Install Required Packages
+### 5.5. Install Required Packages
 
 In the project root directory:
 
-~~~~bash
-sudo xargs -a packages.txt apt install -y
-~~~~
+```bash
+sed '/^\s*#/d;/^\s*$/d' packages.txt | xargs sudo apt install -y
+```
 
-Installs:
-- `brightnessctl`  
-- `touchegg` (Touché)  
-- `xbindkeys`  
-- `xdotool`  
-- `grep`  
-- `google-chrome-stable`
+**Installs:**
+- `brightnessctl=0.5.1-3.1`  
+	+ For brightness controls
+- `grep=3.11-4build1`  
+	+ Used in some scripts
+- `xbindkeys=1.8.7-2`  
+	+ For keymapping Xmodmap does not handle well
+- `xdotool=1:3.20160805.1-5build1`  
+	+ For certain keymapping commands
+- `libinput-tools=1.25.0-1ubuntu2`
+	+ For detecting tablet-mode event emitting hardware
+- `google-chrome-stable` (from official Google repository)  
+- `touchegg` (from PPA or Ubuntu repo)
+	+ For multi-touch gesture commands
 
-### 5.5. Copy Project Files to Your Home Directory
+*Note: Specifying exact package versions is probably unnecessary. However, the internet tells me that some versions of xbindkeys do not add an autostart rule by default, so if the default package does not do this you may need to manually add an autostart rule that runs xbindkeys.*
+
+
+---
+
+#### Alternative: Single-line install command
+With version specifications:
+```bash
+sudo apt install -y brightnessctl=0.5.1-3.1 grep=3.11-4build1 xbindkeys=1.8.7-2 xdotool=1:3.20160805.1-5build1 libinput-tools=1.25.0-1ubuntu2 google-chrome-stable touchegg
+```
+Without version specifications:
+```bash
+sudo apt install -y brightnessctl grep xbindkeys xdotool libinput-tools google-chrome-stable touchegg
+```
+
+### 5.6. Copy Project Files to Your Home Directory
 
 ~~~~bash
 rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-project/ ~/
@@ -173,7 +205,7 @@ You can see a deeper breakdown in [Section 6](#project-file-overview). The autos
 
 TODO: I need to check if xbindkeys autostart needs to be manually added.
 
-### 5.6. Make Relevant Scripts Executable
+### 5.8. Make Relevant Scripts Executable
 
 ~~~~bash
 chmod +x ~/bin/tablet-mode-handler.sh
@@ -203,7 +235,7 @@ your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
 ~~~~
 
 
-### 5.8. (Optional, but Recommended) Add Keyboard Shortcut for Bluetooth Headset Toggle
+### 5.9. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle
 
 ~~~~bash
 xfconf-query \
@@ -215,6 +247,19 @@ xfconf-query \
 Or do this in **Keyboard > Application Shortcuts**.
 
 > **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy.
+
+### 5.10 Log out and back in, or reboot.
+
+Confirm everything is working
+
+- Flip into tablet mode. You should get a notification and you can confirm the keyboard is disabled and re-enabled when you exit tablet mode.
+- Open chrome normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen
+- Test brightness and volume keys
+- Confirm the "lock" key actually is "Delete"
+- Test bluetooth headset audio toggle (Ctrl+Alt+h if using default keymapping)
+- If using the detect-webcam script, you can test with `guvcview -d /dev/webcam` (requires installing guvcview)
+- Test that the window manage key captures a screenshot to clipboard
+- Confirm tap-to-click, 2-finger tap right-click, and 2-finger natural scrolling works.
 
 ---
 
@@ -233,8 +278,8 @@ All the copied files in `~/` after installation serve different roles, but they 
    - **`touchegg.desktop`**  
      - Starts the Touché (touchegg) daemon to enable multi-finger gestures.  
    - **`webcam-link.desktop`**  
-     - (Disabled by default) Runs `detect-webcam.sh` on login, creating a stable `/dev/webcam` symlink.
- * (also) xbindkey also has an autostart, but it seems to be added and handled by xbindkey itself
+     - (Disabled by default, as most users probably won't need this) Runs `detect-webcam.sh` on login, creating a stable `/dev/webcam` symlink.
+ * (also) xbindkey also has an autostart, but it seems to be added and handled by xbindkey itself. If your version of xbindkey does not add an autostart rule, you'll probably want to add one now.
 
 2. **Input Config & Gesture Mapping**  
    - **`.config/keyboardmapping/.Xmodmap`**  
@@ -341,6 +386,7 @@ I can't remember specifically what worked and didn't, but most distros besides X
 4. **Hardware Write Protection**  
    - You must disable write protection at the hardware level by removing the bottom cover and disconnecting the battery.  
    - With the battery unplugged, you must power the device via a suitable USB-C charger.  
+   - The first minute of [this Youtube video](https://www.youtube.com/watch?v=dKZEH0U9Mto) you may find useful.
 
 5. **Install the Firmware**  
    - Use a USB-C flash drive for creating a backup of your existing firmware (strongly recommended). The firmware tool walks you through this.  
