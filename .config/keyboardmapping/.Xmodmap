@@ -27,4 +27,9 @@ keycode 75 = XF86AudioLowerVolume
 keycode 76 = XF86AudioRaiseVolume
 
 ! Lock button
+! Default keymapping is XF86Tools, which doesn't appear to
+! really do anything by default in Xubuntu, though it may
+! for GNOME and KDE.
+! To acheive actual lock screen functionality,
+! replace with XF86ScreenSaver or XF86Sleep
 keycode 191 = Delete
