@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# From Chromebook Nautilus Desktop project: https://github.com/ghodulik95/chromebook-nautilus-desktop
+# This project is not affiliated or endorsed by Google or Samsung
+
+# The device name for the webcam can vary across boots.
+# (It is some variation of /dev/video*, but given that
+#  there are over a dozen virtual camera feeds, it can
+#  bounce around quite a bit)
+# This script parses v4l2-ctl output to identify the
+# path and make a symlink to /dev/webcam.
+# Running this script is not required for most webcam
+# applications, but if you have code that relies on a static
+# device link across boots, running this script on autostart should
+# suffice in ensuring /dev/webcam always links to the webcam.
+
 TARGET_LABEL="720p HD Camera"
 LINK_NAME="/dev/webcam"
 

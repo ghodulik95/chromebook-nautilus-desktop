@@ -65,10 +65,21 @@
 #"rxvt"
 #  Control + b:2 + Release
 
+## Above this text is unmodified xbindkey default coonfiguration.
+## Below are specific mappings for Chromebook Nautilus from
+## https://github.com/ghodulik95/chromebook-nautilus-desktop
+## This project is not affiliated or endorsed by Google or Samsung
+
 ## Below are key mappings/commands for the top F# row in
 ## the Samsung Chromebook Plus v2 Nautilus
+## Note that top-row keys omitted here are instead
+## mapped with XModMap, as some keys could be mapped more simply (xbindkey was a little overkill)
+## As noted in documentation, Google Chrome (and probably Chromium) specifically may intercept
+## these key events if not ran with the flag  --disable-features=KeyboardShortcutViewer
+
+
 ## Most buttons had clear Xubuntu counterparts
-## Windo selection button (next to full screen) instead does a
+## Window selection button (next to full screen) instead does a
 ## Screen capture to clipboard.
 
 # Brightness down

@@ -1,7 +1,16 @@
 #!/bin/bash
 
+# From Chromebook Nautilus Desktop project: https://github.com/ghodulik95/chromebook-nautilus-desktop
+# This project is not affiliated or endorsed by Google or Samsung
+
 # Automatically toggle Bluetooth headset profile between A2DP and HSP
 # Fails gracefully if no device is connected or profile not supported
+# Recommended to add a keyboard mapping if you plan to regularly use.
+# This is not strictly necessary for most applications, but if you find
+# your Bluetooth is not being auto-toggled into headset mode for voice
+# calls or other times you need your headset mic, this may be useful.
+# As with other hardware ids, they seem to bounce around across boots
+# so it may not be a given that saved application settings will always work.
 
 # Get the first connected bluez card
 CARD=$(pactl list cards short | grep bluez_card | awk '{print $1}' | head -n 1)

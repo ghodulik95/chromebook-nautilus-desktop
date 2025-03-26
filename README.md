@@ -272,6 +272,11 @@ Without version specifications:
     
     sudo apt install -y brightnessctl grep xbindkeys xdotool libinput-tools google-chrome-stable touchegg
 
+#### If using the detect-webcam script
+you will also need to install v4l-utils. This can be done with the below command or by uncommenting the package in packages.txt before installing via packages.txt.
+
+		sudo apt install -y v4l-utils
+
 ### 6.6. Modifying the Google Chrome Launcher
 
 To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Refresh, Fullscreen), you’ll need to modify its `.desktop` launcher:
@@ -478,10 +483,10 @@ Below are some issues you could run into.
 - **Check Sudoers**  
   If the script runs commands needing sudo (like `libinput debug-events`), confirm you’ve set `NOPASSWD:` for your username.
 
-### 8.3 No Speaker or AUX Audio
+### 8.3 No Speaker or AUX Audio (headphone jack)
 
 - **Known Device Limitation**  
-  The internal speakers, microphone, and AUX input don’t work out-of-the-box on the Samsung Chromebook Plus v2. Use Bluetooth or attempt advanced fixes at your own risk.
+  The internal speakers, microphone, and headphone jack don’t work out-of-the-box on the Samsung Chromebook Plus v2. Use Bluetooth or attempt advanced fixes at your own risk.
 
 ### 8.4 Multi-Finger Gestures Not Working
 

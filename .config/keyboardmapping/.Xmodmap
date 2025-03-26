@@ -1,4 +1,13 @@
-! Chromebook Top Row Remapping (clean version)
+! Chromebook Nautilus Desktop Top Row Remapping
+! Below are specific mappings for Chromebook Nautilus from
+! https://github.com/ghodulik95/chromebook-nautilus-desktop
+! This project is not affiliated or endorsed by Google or Samsung
+
+! Note that top-row keys omitted here are instead
+! mapped with xbindkey, as some of the functionality of
+! of those keys were more involved.
+! As noted in documentation, Google Chrome (and probably Chromium) specifically may intercept
+! these key events if not ran with the flag  --disable-features=KeyboardShortcutViewer
 
 keycode 67 = XF86Back
 keycode 68 = XF86Forward
