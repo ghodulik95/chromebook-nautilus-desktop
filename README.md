@@ -23,11 +23,11 @@ More disclaimers and limitations are noted in [disclaimers](#disclaimers) and [l
 
 ### Current experience
 
-I have not run extensive stress tests on my Nautilus, but it’s currently running *wonderfully* for all my daily needs and QOL preferences. Even the stylus works great with Krita and Xournal++, including pressure sensitivity and palm rejection. And it is *significantly* speedier than ChromeOS had been running, even after a powerwash. [Performance note](#performance-notes) contains some more details.
+I have not run extensive stress tests on my Nautilus, but it’s currently running *wonderfully* for all my old Chromebook use cases and QOL preferences. Even the stylus works great with Krita and Xournal++, including pressure sensitivity and palm rejection. And it is *significantly* speedier than ChromeOS had been running, even after a powerwash. [Performance notes](#performance-notes) contains some more details.
 
 ### Hardware limitations
 
-Finally, please note that there are some serious hardware limitations related to the internal speakers, microphone, and the tablet-facing camera (the webcam otherwise functions mostly fine). See the [limitations](#limitations) and [disclaimers](#disclaimers) for more details. **You have been warned.**
+Finally, please note that there are some serious hardware limitations related to the internal speakers, microphone, and the tablet-facing camera (the [normal webcam functions fine](#webcam-notes). See the [limitations](#limitations) and [disclaimers](#disclaimers) for more details. **You have been warned.**
 
 
 ---
@@ -56,11 +56,11 @@ Finally, please note that there are some serious hardware limitations related to
 [⬆️ Back to top](#top)  
 [🔗 Back to TOC](#toc)
 
-While Linux can run very well on the Samsung Chromebook Plus v2, there are significant hardware limitations to note:
+While Linux can run very well on the Samsung Chromebook Plus v2 Nautilus, there are significant hardware limitations to note:
 
 1. **Speakers do not work**  
 2. **Microphone does not work**  
-3. **AUX input does not work**  
+3. **AUX headphone jack does not work**  
 4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
 
 If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
@@ -72,7 +72,7 @@ If you rely on internal audio or a built-in mic, this may be a dealbreaker.
 <details>
   <summary>Could the audio issues be fixable?</summary>
 
-  [WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or AUX input, feel free to explore it—but proceed with caution. Xubuntu is not officially supported but Ubuntu 24.10 is.
+  [WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or headphone jack, feel free to explore it—but proceed with caution. Xubuntu is not officially supported by the audio script but Ubuntu 24.10 is.
 </details>
 
 ---
@@ -131,7 +131,7 @@ __This project is not affiliated with or endorsed by Google or Samsung__.
 Modifying the Chromebook firmware and installing Linux on this device can void your warranty and carries an inherent risk of bricking.
 
 ### 4.2. Known hardware limitations and risks
-I'll repeat here: Speakers, AUX-IN (headphone jack), Microphone, and tablet-facing camera do not work. Workarounds on the speakers are specifically known to potentially cause permanent damage. See [Limitations](#limitations).
+I'll repeat here: internal speakers, headphone jack, microphone, and tablet-facing camera do not work. Workarounds on the speakers are specifically known to potentially cause permanent damage. See [Limitations](#limitations).
 
 ### 4.3. My attempts at addressing the hardware limitations
 While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a more involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the time and/or skill to sort it out.
@@ -144,35 +144,37 @@ While I put in *some* effort to get the speakers, headphone jack, and microphone
 [⬆️ Back to top](#top)  
 [🔗 Back to TOC](#toc)
 
-Here’s a high-level outline of the key setup steps. For more specific instructions and commands, see the Installation section.
+Here’s a high-level outline of the key setup steps. For more specific instructions and commands, see the [Installation](#installation) section.
 
 1. **Clone or Download This Project**  
    - Either `git clone https://github.com/ghodulik95/chromebook-nautilus-desktop.git` or download the ZIP to your new Xubuntu install.
 
 2. **Install Required Packages**  
     
-    cd path/to/project
-    sed '/^\s*#/d;/^\s*$/d' packages.txt | xargs sudo apt install -y
+		cd path/to/project
+		sed '/^\s*#/d;/^\s*$/d' packages.txt | xargs sudo apt install -y
+    
 
 3. **Modify Google Chrome .desktop launcher file**
+	
 	Many of the top-row keymappings require the following launch flags to prevent key interception by Chrome:
 
         --disable-features=KeyboardShortcutViewer
 
 4. **Copy Project Files to Your Home Directory**  
 
-    rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-project/ ~/
+		rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-project/ ~/
 
 
 5. **Make Scripts Executable**  
 
-    chmod +x ~/bin/tablet-mode-handler.sh
-    chmod +x ~/bin/toggle-headset-mode.sh
-    chmod +x ~/bin/detect-webcam.sh
+    	chmod +x ~/bin/tablet-mode-handler.sh
+    	chmod +x ~/bin/toggle-headset-mode.sh
+   		chmod +x ~/bin/detect-webcam.sh
 
 
 6. **Enable Passwordless Sudo**  
-   - Add entries in `sudo visudo` if you need the tablet-mode or brightness scripts to run without password prompts (or potentially at all).
+   - Add entries in `sudo visudo` to allow the tablet-mode script and brightnessctl package to run without password prompts.
 
 6. **Reboot & Validate**  
    - Flip the screen to test tablet-mode.  
@@ -200,7 +202,7 @@ These steps assume you’ve already replaced the Chromebook’s firmware with so
 
 ### 6.2. (Optional, but Recommended) Enable Tap-to-Click & Natural Scrolling
 
-By default, Xubuntu’s GUI may not expose these settings. To enable them:
+By default, Xubuntu’s GUI may not expose these settings (It didn't for me). To enable them:
 
     sudo mkdir -p /etc/X11/xorg.conf.d
     sudo nano /etc/X11/xorg.conf.d/40-touchpad.conf
@@ -233,7 +235,7 @@ Download the .zip, or clone the git repository:
     
         sudo apt install git
 
-2. Clone the repo (or download a `.zip`):
+2. Clone the repo (or download a `.zip` and use `unzip` to unzip):
     
         git clone https://github.com/ghodulik95/chromebook-nautilus-desktop.git
 
@@ -252,10 +254,10 @@ In the project root directory:
   + For keymapping Xmodmap does not handle well
 - `xdotool=1:3.20160805.1-5build1`  
   + For certain keymapping commands
-- `libinput-tools=1.25.0-1ubuntu2`
+- `libinput-tools`
   + For detecting tablet-mode event emitting hardware
-- `google-chrome-stable` (from official Google repository)  
-- **Touché** (the `touchegg` package from PPA or Ubuntu repo)  
+- `google-chrome-stable` (from official Google repository, added in prior steps)  
+- Touché (the `touchegg` package from PPA or Ubuntu repo)  
   + For multi-touch gesture commands
 
 *Note: Specifying exact package versions is probably unnecessary. However, the internet tells me that some versions of xbindkeys do not add an autostart rule by default, so if the default package does not do this you may need to manually add an autostart rule that runs xbindkeys.*
@@ -264,7 +266,7 @@ In the project root directory:
 
 With version specifications:
     
-    sudo apt install -y brightnessctl=0.5.1-3.1 grep=3.11-4build1 xbindkeys=1.8.7-2 xdotool=1:3.20160805.1-5build1 libinput-tools=1.25.0-1ubuntu2 google-chrome-stable touchegg
+    sudo apt install -y brightnessctl=0.5.1-3.1 grep=3.11-4build1 xbindkeys=1.8.7-2 xdotool=1:3.20160805.1-5build1 libinput-tools google-chrome-stable touchegg
 
 Without version specifications:
     
@@ -311,7 +313,7 @@ To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Ref
 
 *Note that there are several Exec= lines for different launching options, and it is recommended to add the flag to each so that your top-row keys work as expected at all times.*
 
-**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys. It's likely that Chromium also needs this flag if you prefer Chromium; you can similarly create a custom .desktop by copying it from /usr/share/applications/google-chrome.desktop to ~/.local/share/applications/ and adding the disable-features tag to each Exec line (I have not tested this, YMMV). Other browsers should not need this customization: I think it is specific to Chrome browsers detecting Chromebook hardware.
+**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys. It's likely that Chromium also needs this flag if you prefer Chromium; you can similarly create a custom .desktop by copying it from /usr/share/applications/ to ~/.local/share/applications/ and adding the disable-features tag to each Exec line (I have not tested this with Chromium, YMMV). Other browsers should not need this customization: I think it is specific to Chrome browsers detecting Chromebook hardware.
 
 ### 6.7. Copy Project Files to Your Home Directory
 
@@ -324,11 +326,13 @@ To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Ref
 
 You can see a deeper breakdown in [Section 7](#project-file-overview). The autostart `.desktop` files go into `~/.config/autostart/`. If you decide you don’t want one of these services running at login, open **Session and Startup** (in the Xubuntu Settings GUI) and uncheck or remove the relevant entry.
 
-### 6.8. Make Relevant Scripts Executable
+### 6.8. Make scripts Executable
 
     chmod +x ~/bin/tablet-mode-handler.sh
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
+
+*For a tabular breakdown of what these scripts do, see [this table in section 7](#tabular)*
 
 ### 6.9. Enable Passwordless Sudo
 
@@ -337,7 +341,7 @@ You need passwordless sudo for:
 - `tablet-mode-handler.sh` (managing tablet mode)  
   + The tablet event id can change across boots, so sudo is needed to read the device list from libinput.
 - `brightnessctl` (adjusting screen brightness)  
-  + This software appears to require sudo privileges.
+  + This software appears to require sudo privileges for basic use.
 
 Use:
 
@@ -364,11 +368,12 @@ Or do this in **Keyboard > Application Shortcuts**.
 Confirm everything is working:
 
 - Flip into tablet mode. You should get a notification and you can confirm the keyboard is disabled and re-enabled when you exit tablet mode.
-- Open chrome normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen.
-- Test brightness and volume keys.
-- Confirm the "lock" key actually is "Delete".
+- Open Chrome normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen. **Note that there is unfortunately no cute arrow animation like in ChromeOS, so if a specific web page is being unresponsive to back/forward/refresh, it may look like nothing is happening.**
+- Test brightness and volume keys. (The volume keys should still be responsive even without connected to Bluetooth.)
+- Confirm the "lock" key actually is "Delete". (This is not standard ChromeOS functionality but I prefer it. This is handled with xmodmap if you want to remove this in the config.)
 - Test bluetooth headset audio toggle (Ctrl+Alt+h if using default keymapping).
-- If using the detect-webcam script, you can test with `guvcview -d /dev/webcam` (requires installing guvcview).
+- If using the detect-webcam script, you can test with `guvcview -d /dev/webcam` (requires installing guvcview). If the camera opens with no additional prompting, the symlink worked.
+	+ Note that `cheese` and `ffplay` did not seem to cooperate with specifying devices at command line, so if you test with these, it may appear the symlink did not work. This is why I recommend testing with `guvcview`.
 - Test that the window manage key captures a screenshot to clipboard.
 - Confirm tap-to-click, 2-finger tap right-click, and 2-finger natural scrolling works.
 - All set. Hoorah!
@@ -428,6 +433,7 @@ All the copied files in `~/` after installation serve different roles, but they 
    - **`detect-webcam.sh`**  
      - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled) `webcam-link.desktop`.
 
+<a href="tabular"></a>
 ### 7.2 Tabular summary of scripts and config files
 | **File/Directory**                                      | **Purpose**                                                                                                                         | **Optional or Required?**                                              |
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
@@ -533,6 +539,9 @@ Below are some issues you could run into.
 <a name="who-is-this-for"></a>
 ## 10. Who This Project Is For & Distro Observations
 
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
+
 - **Primary Focus**: A single-user laptop experience that mimics Chromebook shortcuts.  
 - **Not (necessarily) a Power-Linux Layout**: You can adapt these configs for more complex setups if you wish, but out-of-the-box, it’s intended for a straightforward, ChromeOS-like environment.
 
@@ -555,6 +564,7 @@ I can't remember specifically what worked and didn't, but most distros besides X
 [🔗 Back to TOC](#toc)
 
 - **Overall Performance**: Excellent. The Intel Core m3 processor handles everyday tasks smoothly under Xubuntu (web, media, notetaking app with stylus, etc.).
+	+ The only times I noticed lag where I was briefly concerned was when I was running a heavy apt install with multiple other things open.
 
 - **Battery Life**:  
   - I don’t have precise measurements yet because I’ve been doing heavy installs and testing.  

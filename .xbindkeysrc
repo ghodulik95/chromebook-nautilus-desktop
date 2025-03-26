@@ -72,11 +72,11 @@
 ## Screen capture to clipboard.
 
 # Brightness down
-"sudo -n brightnessctl set 10%-"
+"sh -c 'sudo -n brightnessctl set 10%- && notify-send -t 1000 -i display-brightness Brightnes down'"
     m:0x0 + c:72
 
 # Brightness up
-"sudo -n brightnessctl set +10%"
+"sh -c 'sudo -n brightnessctl set +10% && notify-send -t 1000 -i display-brightness Brightness\ up'"
     m:0x0 + c:73
 
 # Page refresh
@@ -89,9 +89,22 @@
 "xdotool sleep 0.1 key F11"
     m:0x0 + c:70
 
+
+# Options for scheenshot with notification and without.
+# Only have one be uncommented
 # F5/Window manager button --> Screenshot full screen to clipboard
-"xfce4-screenshooter --fullscreen -c"
+# Without notification
+#"xfce4-screenshooter --fullscreen -c"
+#    m:0x0 + c:71
+
+# F5/Window manager button --> Screenshot full screen to clipboard with notification
+# With notification
+# Screenshot with notification — using proper environment vars
+# F5/Window manager button --> Screenshot full screen to clipboard with notification
+# Internal quotes are super finicky so use backticked spaces instead
+"sh -c 'xfce4-screenshooter --fullscreen -c && notify-send -t 1500 -i camera-photo Screenshot\ captured Saved\ to\ clipboard'"
     m:0x0 + c:71
+
 
 # (Does not work) Ctrl + F5 --> Open specific tabs in Chrome
 # Seems to already be mapped on something else?
