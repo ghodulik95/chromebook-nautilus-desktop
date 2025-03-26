@@ -1,8 +1,33 @@
-# Installing Linux on a Samsung Chromebook Plus v2 (codename Nautilus)
+# Customized Desktop Environment for Xubuntu on the Samsung Chromebook Plus v2 (Nautilus)
 
-If you want to run Linux on your Samsung Chromebook Plus v2, you’re in luck—it’s absolutely possible! This project provides a convenient setup for a working **Xubuntu** desktop environment that replicates many Chromebook conveniences (minus some hardware limitations). It was not tested on other distros or desktops.
+So you’ve installed (or want to install) Linux on your beloved Samsung Chromebook Plus v2 (Nautilus) but don’t want to deal with improper key mappings, poor tablet-mode handling, or missing ChromeOS conveniences (e.g., gesture navigation). Don’t worry—this repository should help! I have found these modifications sufficiently **address** those issues, at least for my needs.
 
-Installing Linux on this Chromebook (and many Chromebooks) can be more involved than on a typical PC because you must replace or modify the original firmware for UEFI boot. However, once that’s done and Xubuntu is installed, you’ll enjoy (almost) the full functionality of your old Chromebook plus the power and speed of a Linux system. Even the stylus works great with Krita and Xournal++.
+### Tested configuration
+
+These modifications have been tested only on Xubuntu, specifically *Xubuntu 24.04.2 LTS (Noble Numbat)*. Your mileage may vary with other distros or Xubuntu versions, and many features may not work on non-Xfce desktops.
+
+### Important disclaimer
+
+__This project is not affiliated with or endorsed by Google or Samsung__.
+
+__Use the scripts and configurations included in this project at your own risk.__
+
+This project is **not** intended as a guide for updating Chromebook firmware or installing Linux once you have UEFI. However, [section 12](#uefi) contains some informal notes on my installation experience that may serve as an additional resource alongside proper documentation (I recommend MrChromebox). Proceed with caution, and do **not** assume those notes apply to any Chromebook other than the Samsung Chromebook Plus v2 (Nautilus). Replacing or modifying the original firmware for UEFI boot on a Chromebook can be riskier and more involved than a typical Linux installation on a PC. 
+
+More disclaimers and limitations are noted in [disclaimers](#disclaimers) and [limitations](#limitations).
+
+### Other Linux distributions?
+
+[Section 10](#who-is-this-for) describes other distros I tested (NixOS, Manjaro, Fedora, Vanilla Puppy), highlighting some hardware compatibility issues I encountered before ultimately choosing Xubuntu. In short, Xubuntu provided the best out-of-the-box experience among these options—even though NixOS was my first preference.
+
+### Current experience
+
+I have not run extensive stress tests on my Nautilus, but it’s currently running *wonderfully* for all my daily needs and QOL preferences. Even the stylus works great with Krita and Xournal++, including pressure sensitivity and palm rejection. And it is *significantly* speedier than ChromeOS had been running, even after a powerwash. [Performance note](#performance-notes) contains some more details.
+
+### Hardware limitations
+
+Finally, please note that there are some serious hardware limitations related to the internal speakers, microphone, and the tablet-facing camera (the webcam otherwise functions mostly fine). See the [limitations](#limitations) and [disclaimers](#disclaimers) for more details. **You have been warned.**
+
 
 ---
 
@@ -86,6 +111,8 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
 <a name="disclaimers"></a>
 ## 4. Disclaimers
 
+__This project is not affiliated with or endorsed by Google or Samsung__.
+
 ### 4.1. Warranties & Risk of Bricking
 Modifying the Chromebook firmware and installing Linux on this device can void your warranty and carries an inherent risk of bricking.
 
@@ -110,20 +137,24 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
     cd path/to/project
     sed '/^\s*#/d;/^\s*$/d' packages.txt | xargs sudo apt install -y
 
+3. **Modify Google Chrome .desktop launcher file**
+	Many of the top-row keymappings require the following launch flags to prevent key interception by Chrome:
 
-3. **Copy Project Files to Your Home Directory**  
+        --disable-features=KeyboardShortcutViewer
+
+4. **Copy Project Files to Your Home Directory**  
 
     rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-project/ ~/
 
 
-4. **Make Scripts Executable**  
+5. **Make Scripts Executable**  
 
     chmod +x ~/bin/tablet-mode-handler.sh
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
 
 
-5. **Enable Passwordless Sudo (Optional)**  
+6. **Enable Passwordless Sudo**  
    - Add entries in `sudo visudo` if you need the tablet-mode or brightness scripts to run without password prompts (or potentially at all).
 
 6. **Reboot & Validate**  
@@ -131,7 +162,7 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
    - Confirm the top-row keys work as expected.  
    - Test gestures, brightness, and Bluetooth audio if you configured them.  
 
-For more in-depth instructions and caveats, consult the detailed sections of this README.
+For more in-depth instructions, see the next section.
 
 ---
 <a name="installation"></a>
@@ -219,7 +250,50 @@ Without version specifications:
     
     sudo apt install -y brightnessctl grep xbindkeys xdotool libinput-tools google-chrome-stable touchegg
 
-### 6.6. Copy Project Files to Your Home Directory
+### 6.6. Modifying the Google Chrome Launcher
+
+To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Refresh, Fullscreen), you’ll need to modify its `.desktop` launcher:
+
+1. **Copy the system launcher to your local applications directory**:
+
+        mkdir -p ~/.local/share/applications/
+        cp /usr/share/applications/google-chrome.desktop ~/.local/share/applications/
+
+2. **Edit the copied file**:
+
+        nano ~/.local/share/applications/google-chrome.desktop
+
+3. **Add the following flag** to each `Exec=` line:
+
+        --disable-features=KeyboardShortcutViewer
+
+    For example, change:
+
+        Exec=/usr/bin/google-chrome-stable %U
+
+    to:
+
+        Exec=/usr/bin/google-chrome-stable --disable-features=KeyboardShortcutViewer %U
+
+#### Example Diff
+
+        --- /usr/share/applications/google-chrome.desktop
+        +++ ~/.local/share/applications/google-chrome.desktop
+        @@ -2,7 +2,7 @@
+         Version=1.0
+         Name=Google Chrome
+         GenericName=Web Browser
+        -Exec=/usr/bin/google-chrome-stable %U
+        +Exec=/usr/bin/google-chrome-stable --disable-features=KeyboardShortcutViewer %U
+         Terminal=false
+         Icon=google-chrome
+         Type=Application
+
+*Note that there are several Exec= lines for different launching options, and it is recommended to add the flag to each so that your top-row keys work as expected at all times.*
+
+**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys. It's likely that Chromium also needs this flag if you prefer Chromium; you can similarly create a custom .desktop by copying it from /usr/share/applications/google-chrome.desktop to ~/.local/share/applications/ and adding the disable-features tag to each Exec line (I have not tested this, YMMV). Other browsers should not need this customization: I think it is specific to Chrome browsers detecting Chromebook hardware.
+
+### 6.7. Copy Project Files to Your Home Directory
 
     rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-project/ ~/
 
@@ -230,13 +304,13 @@ Without version specifications:
 
 You can see a deeper breakdown in [Section 7](#project-file-overview). The autostart `.desktop` files go into `~/.config/autostart/`. If you decide you don’t want one of these services running at login, open **Session and Startup** (in the Xubuntu Settings GUI) and uncheck or remove the relevant entry.
 
-### 6.7. Make Relevant Scripts Executable
+### 6.8. Make Relevant Scripts Executable
 
     chmod +x ~/bin/tablet-mode-handler.sh
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
 
-### 6.8. Enable Passwordless Sudo
+### 6.9. Enable Passwordless Sudo
 
 You need passwordless sudo for:
 
@@ -254,7 +328,7 @@ Then add lines like (replacing your-username 3 times with your username):
     your-username ALL=(ALL) NOPASSWD: /home/your-username/bin/tablet-mode-handler.sh
     your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
 
-### 6.9. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle
+### 6.10. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle
 
     xfconf-query \
       -c xfce4-keyboard-shortcuts \
@@ -265,7 +339,7 @@ Or do this in **Keyboard > Application Shortcuts**.
 
 > **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy.
 
-### 6.10. Log out and back in, or reboot.
+### 6.11. Log out and back in, or reboot.
 
 Confirm everything is working:
 
@@ -277,6 +351,15 @@ Confirm everything is working:
 - If using the detect-webcam script, you can test with `guvcview -d /dev/webcam` (requires installing guvcview).
 - Test that the window manage key captures a screenshot to clipboard.
 - Confirm tap-to-click, 2-finger tap right-click, and 2-finger natural scrolling works.
+- All set. Hoorah!
+
+### 6.12. Other desktop configurations to consider.
+
+1. Window snapping on screen edge *should* already be enabled, although I found it pretty difficult to activate without tap-to-click enabled via step 6.2. If for some reason it is not enabled, the setting is in Window Manager Tweaks > Accessibility. I think this requires display compositing, which should also be enabled, but if it is not, the setting is in Window Manager Tweaks > Compositor.
+	- You might want to enable Window snapping to other windows in Window Manager > Advanced.
+2. In Window Manager Tweaks > Compository, you can modify opacity of windows when they are moving or inactive.
+3. Since I didn't have a use case for the Window manager key (right of the fullscreen key), I mapped this to do a fullscreen screenshot to clipboard. If you'd prefer a different mapping, modify `~/.xbindkeysrc`.
+4. Touché has a lot more potential use for more complex swipe navigation. I only added rules for 3-finger swiping for back/forward/maximize/minimize and pinch-to-zoom. Modications can be made to `~/.config/touchegg/touchegg.conf`.
 
 <a name="project-file-overview"></a>
 ## 7. Project File Overview
@@ -288,24 +371,31 @@ All the copied files in `~/` after installation serve different roles, but they 
 1. **Autostart Desktop Files** (`~/.config/autostart/`)  
    - **`Tablet Mode Toggle.desktop`**  
      - Runs `bin/tablet-mode-handler.sh` at login, automatically enabling/disabling your keyboard when you fold the screen.  
+     - This file was originally generated by Xubuntu’s autostart manager.
    - **`XModMap.desktop`**  
      - Applies `.config/keyboardmapping/.Xmodmap` to restore top-row keys (Back, Forward, Mute, Volume, etc.).  
+     - This file was originally generated by Xubuntu’s autostart manager.
    - **`touchegg.desktop`**  
      - Starts the Touché daemon (the `touchegg` package) to enable multi-finger gestures.  
+     - This file was originally generated by Xubuntu’s autostart manager.
    - **`webcam-link.desktop`**  
      - (Disabled by default, as most users probably won't need this) Runs `detect-webcam.sh` on login, creating a stable `/dev/webcam` symlink.
-   
-   *(Also, xbindkeys may add its own autostart; if not, you’d need to do so manually.)*
+     - This file was originally generated by Xubuntu’s autostart manager.
+
+* (Also, note xbindkeys should add its own autostart under `/usr/share/xsessions/xbindkeys.desktop` or `/etc/xdg/autostart/xbindkeys.desktop`; if not, you’d need to manually add an autostart rule at the user or system level.)*
 
 2. **Input Config & Gesture Mapping**  
    - **`.config/keyboardmapping/.Xmodmap`**  
      - Remaps many F-row keys to their Chromebook counterparts.  
      - Lock button is mapped to delete instead.
+     - This file contains many of the default contents from running xmodmap -pke (which prints the current keymap to stdout).
    - **`.xbindkeysrc`**  
      - Handles keys that `xmodmap` can’t, like brightness.  
      - The window manage key is set to screenshot to clipboard.
+     - This file contains many of the default contents from running xbindkeys --defaults (which outputs a sample/default configuration).
    - **`.config/touchegg/touchegg.conf`**  
      - Defines gesture mappings (e.g., 3-finger swipes for browser back/forward, minimize, maximize).
+     - This file contains many of the default contents created after first launching touchegg or running touchegg --generate-config.
 
 3. **Custom Scripts** (`~/bin/`)  
    - **`tablet-mode-handler.sh`**  
@@ -315,13 +405,7 @@ All the copied files in `~/` after installation serve different roles, but they 
    - **`detect-webcam.sh`**  
      - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled) `webcam-link.desktop`.
 
-### 7.2. Modified Google Chrome Desktop Launcher
-
-- **`.local/share/applications/google-chrome.desktop`**  
-  - Adds `--disable-features=KeyboardShortcutViewer` so Chrome doesn’t hijack top-row keys.  
-  - **Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys. It's likely that Chromium also needs this flag if you prefer Chromium; you can similarly create a custom .desktop by copying it from /usr/share/applications/google-chrome.desktop to ~/.local/share/applications/ and adding the disable-features tag to each Exec line. Other browsers should not need this customization: I think it is specific to Chrome browsers detecting Chromebook hardware.
-
-### 7.3 Tabular summary of scripts and config files
+### 7.2 Tabular summary of scripts and config files
 | **File/Directory**                                      | **Purpose**                                                                                                                         | **Optional or Required?**                                              |
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | `~/.config/autostart/Tablet Mode Toggle.desktop`        | Launches `~/bin/tablet-mode-handler.sh` at login to auto-enable/disable the keyboard in tablet mode.                                | Required for seamless tablet-mode functionality                          |
