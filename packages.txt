@@ -82,6 +82,9 @@ touchegg
 # guvcview
 # ffplay
 
+## Github authorization
+# gh
+
 #############################################
 # Packages That Had Issues During Installation or Trying to Running
 #############################################
