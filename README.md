@@ -1,12 +1,13 @@
+<a name="top"></a>
 # Customized Desktop Environment for Xubuntu on the Samsung Chromebook Plus v2 (Nautilus)
 
-So you’ve installed (or want to install) Linux on your beloved Samsung Chromebook Plus v2 (Nautilus) but don’t want to deal with improper key mappings, poor tablet-mode handling, or missing ChromeOS conveniences (e.g., gesture navigation). Don’t worry—this repository should help! I have found these modifications sufficiently **address** those issues, at least for my needs.
+So you’ve installed (or want to install) Linux on your beloved Samsung Chromebook Plus v2 (Nautilus) but don’t want to deal with improper key mappings, poor tablet-mode handling, or missing ChromeOS conveniences (e.g., gesture navigation). Don’t worry—this repository should help! I have found these modifications sufficiently address those issues, at least for my needs.
 
 ### Tested configuration
 
 These modifications have been tested only on Xubuntu, specifically *Xubuntu 24.04.2 LTS (Noble Numbat)*. Your mileage may vary with other distros or Xubuntu versions, and many features may not work on non-Xfce desktops.
 
-### Important disclaimer
+### Important disclaimers
 
 __This project is not affiliated with or endorsed by Google or Samsung__.
 
@@ -31,6 +32,7 @@ Finally, please note that there are some serious hardware limitations related to
 
 ---
 
+<a name="toc"></a>
 ## Table of Contents
 
 1. [Limitations](#limitations)  
@@ -50,6 +52,9 @@ Finally, please note that there are some serious hardware limitations related to
 
 <a name="limitations"></a>
 ## 1. Limitations
+
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
 
 While Linux can run very well on the Samsung Chromebook Plus v2, there are significant hardware limitations to note:
 
@@ -75,6 +80,9 @@ If you rely on internal audio or a built-in mic, this may be a dealbreaker.
 <a name="features"></a>
 ## 2. Features of This Project
 
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
+
 This repository helps you keep some of the conveniences you had in ChromeOS:
 
 1. **Functional F1–F10 Row**  
@@ -97,6 +105,9 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
 <a name="whats-not-included"></a>
 ## 3. What’s Not Included
 
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
+
 - **Firmware Installation Steps**  
   I do not provide detailed instructions for flashing or replacing the Chromebook’s firmware. For that, refer to [MrChromebox’s documentation](https://docs.mrchromebox.tech/).
 
@@ -110,6 +121,9 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
 
 <a name="disclaimers"></a>
 ## 4. Disclaimers
+
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
 
 __This project is not affiliated with or endorsed by Google or Samsung__.
 
@@ -126,6 +140,9 @@ While I put in *some* effort to get the speakers, headphone jack, and microphone
 
 <a name="quick-start"></a>
 ## 5. Quick Start
+
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
 
 Here’s a high-level outline of the key setup steps. For more specific instructions and commands, see the Installation section.
 
@@ -167,6 +184,9 @@ For more in-depth instructions, see the next section.
 ---
 <a name="installation"></a>
 ## 6. Installation & Setup Steps
+
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
 
 These steps assume you’ve already replaced the Chromebook’s firmware with something UEFI-capable (e.g., via MrChromebox scripts).
 
@@ -364,6 +384,9 @@ Confirm everything is working:
 <a name="project-file-overview"></a>
 ## 7. Project File Overview
 
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
+
 All the copied files in `~/` after installation serve different roles, but they can be grouped as follows:
 
 ### 7.1 Autostart, Input, and Custom Scripts
@@ -425,6 +448,9 @@ All the copied files in `~/` after installation serve different roles, but they 
 
 <a name="troubleshooting"></a>
 ## 8. Troubleshooting
+
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
 
 Below are some issues you could run into.
 
@@ -488,6 +514,9 @@ Below are some issues you could run into.
 <a name="webcam-notes"></a>
 ## 9. Webcam Notes
 
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
+
 - **Works Out of the Box**: The front-facing webcam (labeled something like *720p HD Camera*) typically works fine without the `detect-webcam.sh` script. However, you might see multiple `/dev/videoX` devices in some apps, and only one of them is the real camera feed.
 
 - **Symlink Behavior**:  
@@ -522,6 +551,9 @@ I can't remember specifically what worked and didn't, but most distros besides X
 <a name="performance-notes"></a>
 ## 11. Performance Notes
 
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
+
 - **Overall Performance**: Excellent. The Intel Core m3 processor handles everyday tasks smoothly under Xubuntu (web, media, notetaking app with stylus, etc.).
 
 - **Battery Life**:  
@@ -534,6 +566,9 @@ I can't remember specifically what worked and didn't, but most distros besides X
 
 <a name="uefi"></a>
 ## 12. UEFI Firmware Installation (Non-Comprehensive Summary)
+
+[⬆️ Back to top](#top)  
+[🔗 Back to TOC](#toc)
 
 *This is **not** a full guide. Before proceeding, thoroughly read [MrChromebox’s documentation](https://docs.mrchromebox.tech/docs/getting-started.html). The steps below are only additional notes specific to the Samsung Chromebook Plus v2 (Nautilus).*
 
