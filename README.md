@@ -263,8 +263,19 @@ All the copied files in `~/` after installation serve different roles, but they 
 
 ---
 
+<a name="debug-tools"></a>
+## 7. Notable debugging tools/commands
+
+- **showkey**: Useful for debugging keys for keymapping
+- **xev**: Useful for debugging keys for keymapping
+- **xbindkeys -v**: Useful for debugging keys for keymapping
+- **libinput debug-events**: Useful for debugging keys for keymapping and  seeing stuff like the tablet-mode event
+- **touchegg --debug**: Useful for seeing what touchegg is picking up
+
+---
+
 <a name="webcam-notes"></a>
-## 7. Webcam Notes
+## 8. Webcam Notes
 
 - **Works Out of the Box**: The front-facing webcam (labeled something like *720p HD Camera*) typically works fine without the `detect-webcam.sh` script. However, you might see multiple `/dev/videoX` devices in some apps, and only one of them is the real camera feed.  
 - **Symlink Behavior**: If you do enable `detect-webcam.sh`, you can then run:  
@@ -280,7 +291,7 @@ All the copied files in `~/` after installation serve different roles, but they 
 ---
 
 <a name="who-is-this-for"></a>
-## 8. Who This Project Is For & Distro Observations
+## 9. Who This Project Is For & Distro Observations
 
 - **Primary Focus**: A single-user laptop experience that mimics Chromebook shortcuts.  
 - **Not (necessarily) a Power-Linux Layout**: You can adapt these configs for more complex setups if you wish, but out-of-the-box, it’s intended for a straightforward, ChromeOS-like environment.
@@ -297,7 +308,7 @@ I can't remember specifically what worked and didn't, but most distros besides X
 ---
 
 <a name="performance-notes"></a>
-## 9. Performance Notes
+## 10. Performance Notes
 
 - **Overall Performance**: Excellent. The Intel Core m3 processor handles everyday tasks smoothly under Xubuntu (web, media, notetaking app with stylus, etc.).  
 - **Battery Life**:  
@@ -307,7 +318,8 @@ I can't remember specifically what worked and didn't, but most distros besides X
 - **Miscellaneous**:  
   - I tried installing OpenBoard to try even more stylus apps, but had trouble getting dependencies to work. Krita and Xournal++ seem to work great though. At least as smooth as the ChromeOS/Android options I used before. 
 
-# UEFI Firmware Installation (Non-Comprehensive Summary)
+<a name="uefi"></a>
+## 11. UEFI Firmware Installation (Non-Comprehensive Summary)
 
 *This is **not** a full guide. Before proceeding, thoroughly read [MrChromebox’s documentation](https://docs.mrchromebox.tech/docs/getting-started.html). The steps below are only additional notes specific to the Samsung Chromebook Plus v2 (Nautilus).*
 
