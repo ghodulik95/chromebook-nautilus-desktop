@@ -1,0 +1,10 @@
+! Chromebook Top Row Remapping (clean version)
+
+keycode 67 = XF86Back
+keycode 68 = XF86Forward
+keycode 74 = XF86AudioMute
+keycode 75 = XF86AudioLowerVolume
+keycode 76 = XF86AudioRaiseVolume
+
+! Lock button
+keycode 191 = Delete

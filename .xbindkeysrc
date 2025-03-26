@@ -1,0 +1,112 @@
+# For the benefit of emacs users: -*- shell-script -*-
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 1.8.7
+#
+# If you edit this file, do not forget to uncomment any lines
+# that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# To specify a key, you can use 'xbindkeys --key' or
+# 'xbindkeys --multikey' and put one of the two lines in this file.
+#
+# The format of a command line is:
+#    "command to start"
+#       associated key
+#
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h
+# The XK_ is not needed.
+#
+# List of modifier:
+#   Release, Control, Shift, Mod1 (Alt), Mod2 (NumLock),
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll).
+#
+
+# The release modifier is not a standard X modifier, but you can
+# use it if you want to catch release events instead of press events
+
+# By defaults, xbindkeys does not pay attention with the modifiers
+# NumLock, CapsLock and ScrollLock.
+# Uncomment the lines above if you want to pay attention to them.
+
+#keystate_numlock = enable
+#keystate_capslock = enable
+#keystate_scrolllock= enable
+
+# Examples of commands:
+
+"xbindkeys_show" 
+  control+shift + q
+
+# set directly keycode (here control + f with my keyboard)
+#"xterm"
+#  c:41 + m:0x4
+
+# specify a mouse button
+#"xterm"
+#  control + b:2
+
+#"xterm -geom 50x20+20+20"
+#   Shift+Mod2+alt + s
+#
+## set directly keycode (here control+alt+mod2 + f with my keyboard)
+#"xterm"
+#  alt + c:0x29 + m:4 + mod2
+#
+## Control+Shift+a  release event starts rxvt
+#"rxvt"
+#  release+control+shift + a
+#
+## Control + mouse button 2 release event starts rxvt
+#"rxvt"
+#  Control + b:2 + Release
+
+## Below are key mappings/commands for the top F# row in
+## the Samsung Chromebook Plus v2 Nautilus
+## Most buttons had clear Xubuntu counterparts
+## Windo selection button (next to full screen) instead does a
+## Screen capture to clipboard.
+
+# Brightness down
+"sudo -n brightnessctl set 10%-"
+    m:0x0 + c:72
+
+# Brightness up
+"sudo -n brightnessctl set +10%"
+    m:0x0 + c:73
+
+# Page refresh
+# 0.1s delay ensures it goes to the correct window
+"xdotool sleep 0.1 key ctrl+r"
+    m:0x0 + c:69
+
+# Full screen
+# 0.1s delay ensures it goes to the correct window
+"xdotool sleep 0.1 key F11"
+    m:0x0 + c:70
+
+# F5/Window manager button --> Screenshot full screen to clipboard
+"xfce4-screenshooter --fullscreen -c"
+    m:0x0 + c:71
+
+# (Does not work) Ctrl + F5 --> Open specific tabs in Chrome
+# Seems to already be mapped on something else?
+# Note that Ctrl+Alt_F5/window button opens a TTY console
+#"google-chrome-stable https://mail.google.com https://calendar.google.com https://news.ycombinator.com"
+#    m:0x4 + c:71
+
+## Below are not specific to Samsung Chrombook v2 Nautilus
+## Just some personal preferences stuff
+## Commenting out by default
+# Ctrl + Alt + C --> Open Clipman history
+#"xfce4-clipman-history"
+#    Control+Alt + v
+
+
+##################################
+# End of xbindkeys configuration #
+##################################

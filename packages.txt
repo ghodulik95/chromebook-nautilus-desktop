@@ -1,0 +1,27 @@
+### Packages needed for Samsung Chromebook Pluz v2 (Nautilus) functions
+
+### Below are needed and probably not included in base Xubuntu
+brightnessctl
+google-chrome-stable
+touchegg
+xbindkeys
+xdotool
+grep
+
+# Uncomment/install if using webcam-link.sh script
+#v4l-utils
+
+### Below are commented out as they are likely included in base Xubuntu install
+# git
+
+### Below are optional, may be useful for debugging
+
+## Video recorders
+# cheese
+# guvcview
+
+## Video player
+# ffplay
+
+## Markdown editor (relatively heavy)
+# ghostwriter
