@@ -1,13 +1,24 @@
 ! Chromebook Nautilus Desktop Top Row Remapping
-! Below are specific mappings for Chromebook Nautilus from
+! Below are specific mappings for the Chromebook Nautilus from:
 ! https://github.com/ghodulik95/chromebook-nautilus-desktop
-! This project is not affiliated or endorsed by Google or Samsung
-
-! Note that top-row keys omitted here are instead
-! mapped with xbindkey, as some of the functionality of
-! of those keys were more involved.
-! As noted in documentation, Google Chrome (and probably Chromium) specifically may intercept
-! these key events if not ran with the flag  --disable-features=KeyboardShortcutViewer
+! This project is not affiliated with or endorsed by Google or Samsung.
+!
+! The following mappings are for the top-row keys on the
+! Samsung Chromebook Plus v2 (Nautilus), which are not actually labeled
+! as F# keys on the keyboard.
+!
+! Note that top-row keys omitted here are instead mapped with xbindkeys,
+! as their functionality was more complex, and/or there was some funkiness with
+! Nautilus mappings that made xbindkeys a better fit for some cases
+! and xmodmap a better fit for other. (Though I might be misremembering.)
+!
+! While I generally recommend using tools like `xev | grep keycode` and `xbindkeys -k`
+! to identify keycodes and modifiers, I vaguely recall that `showkey` was useful
+! in a few edge cases — though I may be mistaken about that as well.
+!
+! As noted in documentation, Google Chrome (and likely Chromium) may intercept
+! these key events unless launched with the flag:
+!     --disable-features=KeyboardShortcutViewer
 
 keycode 67 = XF86Back
 keycode 68 = XF86Forward
