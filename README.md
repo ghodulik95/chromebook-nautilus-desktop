@@ -1,190 +1,342 @@
-# So you want to install Linux on your Samsung Chromebook Plus v2 (codename Nautilus)?
+# Installing Linux on a Samsung Chromebook Plus v2 (codename Nautilus)
 
-I did too! Thankfully it is totally doable, and I've created this project to more easily set up your desktop environment once you do. This project and its contents should assure you that installing Linux can be done without bricking your device, and you will still have (almost) the full functionality of your old Chromebook, plus all the functionality and speediness of Linux.
+If you want to run Linux on your Samsung Chromebook Plus v2, you’re in luck—it’s absolutely possible! This project provides a convenient setup for a working **Xubuntu** desktop environment that replicates many Chromebook conveniences (minus some hardware limitations).
 
-## Limitations
+Installing Linux on this Chromebook (and many Chromebooks) can be more involved than on a typical PC because you must replace or modify the original firmware for UEFI boot. However, once that’s done and Xubuntu is installed, you’ll enjoy (almost) the full functionality of your old Chromebook plus the power and speed of a Linux system. Even the stylus works great with Krita and Xournal++.
 
-__The only serious limitations to Linux on your Samsung Chromebook Plus v2 are: 1) Your speakers will not work, 2) Your microphone will not work, and 3) Your AUX-input will not work! 4) Tablet camera does not work (but normal webcam facing camera does). If any of these are absolute dealbreakers*, you may want to stick with ChromeOS :(__
+---
 
-Bluetooth works great though for audio and mic. For me, Bluetooth is working way way better than it ever did on ChromeOS (it was nearly unuseable in the end).
+## Table of Contents
+
+1. [Limitations](#limitations)  
+2. [Features of This Project](#features)  
+3. [What’s Not Included](#whats-not-included)  
+4. [Disclaimers](#disclaimers)  
+5. [Installation & Setup Steps](#installation)  
+6. [Project File Overview](#project-file-overview)  
+7. [Webcam Notes](#webcam-notes)  
+8. [Who This Project Is For & Distro Observations](#who-is-this-for)  
+9. [Performance Notes](#performance-notes)
+
+---
+
+<a name="limitations"></a>
+## 1. Limitations
+
+While Linux can run very well on the Samsung Chromebook Plus v2, there are significant hardware limitations to note:
+
+1. **Speakers do not work**  
+2. **Microphone does not work**  
+3. **AUX input does not work**  
+4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
+
+If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
+
+> **Bluetooth Audio Workaround**  
+> - Headphone and microphone modes work great via Bluetooth.  
+> - Anecdotally, Bluetooth under ChromeOS had become nearly unusable for me—failing to connect to most devices. Under Xubuntu, Bluetooth has been rock-solid and easily connects to all my devices.
 
 <details>
-  <summary>* You're not necessarily SOL, though. </summary>
-  
-  [This script by WeirdTreeThing](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) is supposed to work on Ubuntu 24.10 and some other supported distros, and therefor e might work on Xubuntu. HOWEVER, it has a known issue of busting the speakers PERMANENTLY on the Samsung Chromebook Plus v2 when used on high volume settings. Still, this script might work to fix your microphone or AUX-IN. I personally tried running it once when using NixOS and it did not work so I gave up. I have been content with Bluetooth on Xubuntu so for the moment I do not plan to try and further fix the audio.
+  <summary>Could the audio issues be fixable?</summary>
+
+  [WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or AUX input, feel free to explore it—but proceed with caution. Xubuntu is not officially supported but Ubuntu 24.10 is.
 </details>
 
-## Included Features of this project
+---
 
-The contents of this project will allow you to use Linux (specifically Xubuntu) without having to forego these features you might have enjoyed while running ChromeOS:  
+<a name="features"></a>
+## 2. Features of This Project
 
-1. Functional F1-F10 row that does original Chromebook functions
-	- Xubuntu, and probably most Linux distros, is going to recognize these keys as F1-F10, rather than 
-		- Back
-		- Forward
-		- Refresh
-		- Fullscreen
-		- Window manage
-		- Minus brightness
-		- Plus brightness
-		- (Un)Mute
-		- Minus volume
-		- Plus volume
-		- Screen Lock
-2. Tablet mode
-	- Note that this is not a full featured tablet mode, but this will disable the keyboard on tablet mode, and re-enable it when going back to laptop mode. You could probably customize a better tablet mode fairly easily though if you want to.
-3. Swipe navigation
-	- I really liked swipe for browser back-foreward functions on ChromeOS. And this is possible on Linux, albeit I could only get 3-finger swiping to work instead of 2-finger swiping.
-4. Bluetooth headphone/headset toggle
-	1. While Bluetooth works great, applications don't necessarily auto-toggle between headphones/headset mode, so included is a script that will do this toggle with toggler (by default with hotkeys Ctrl+Alt+h)
-5. Tap to click from mousepad.
-	
-## What is not included in this documentation
+This repository helps you keep some of the conveniences you had in ChromeOS:
 
-While I will include a light summary on the Linux install process, and why I decided to settle on Xubuntu over other distros I tested, I will not be supplying a detailed guide. [MrChromebox](https://docs.mrchromebox.tech/) has already done an excellent job of that!
+1. **Functional F1–F10 Row**  
+   - Restores the top-row keys to Chromebook roles (Back, Forward, Refresh, Fullscreen, etc.).
 
-__DISCLAIMERS: As is well communicated in the MrChromebox documentation, installing Linux on a Chromebook, and specifically the Samsung Chromebook v2 Plus (codename Nautilus), is an involved process that will 1) void warranties and 2) carry risk of bricking your device. Proceed with caution on that.__
+2. **Tablet Mode**  
+   - Disables the keyboard automatically when the screen is folded into tablet position, then re-enables it afterward.
 
-But once Xubuntu is installed, the stuff in this project should not carry more risk of bricking your device than tweaking stuff in Linux does in general.
+3. **Swipe Navigation**  
+   - Implements 3-finger swipes for browser back/forward (mimicking ChromeOS-style gestures).
 
-# Background/Prerequisites
+4. **Bluetooth Headphone/Headset Toggle**  
+   - Quickly switch between high-quality audio (“headphone”) and mic-enabled (“headset”) modes.
 
-## Who is this for?
+5. **Tap-to-Click & Natural Scrolling**  
+   - Makes the touchpad behave more like ChromeOS.
 
-I tailored this project for the former use cases of what I used my Samsung Chromebook Plus v2 for: easy browsing, prioritizing the experience for the main user. A lot of the tricks I use are specific to the logged in user - modifications would need to be made to make these work at the whole system level. You could also just install all this stuff for each user.
+---
 
-If your goal is to be a power-user, high-fidelity/security user, multi-user machine, and/or you already have tons of specific desktop preferences that deviate significantly from ChromeOS, you may not appreciate this project. Still, it might be useful for you as simple confirmation that Linux can run on your device! And you might still want to read my notes on Why Xubuntu. 
+<a name="whats-not-included"></a>
+## 3. What’s Not Included
 
-## Why Xubuntu?
+- **Firmware Installation Steps**  
+  I do not provide detailed instructions for flashing or replacing the Chromebook’s firmware. For that, refer to [MrChromebox’s documentation](https://docs.mrchromebox.tech/).
 
-The short answer is that Xubuntu is lightweight and I found that most hardware worked out-of-the-box with Xubuntu compared to other distros I tried. Specifically, Bluetooth, Wifi, and the webcam all worked out-of-the-box more or less with Xubuntu.
+- **Full Xubuntu Installation Tutorial**  
+  Once UEFI boot is enabled, installing Xubuntu is similar to any standard PC. I won’t provide every step here.
 
-My hope was to be able to run NixOS, but after working on the audio for a few hours and then realizing Bluetooth did not work out-of-the-box, I began searching for other distros that would work better right out-of-the-box.
+- **System-Wide or Power-User Customizations**  
+  These configs focus on replicating a ChromeOS-like, single-user experience. If you want multi-user or heavily locked-down setups, you can adapt these scripts as needed.
 
-I tried:
+---
 
-- Fedora KDE
-- Manjora XFCE
-- NixOS Plasma
-- Vanilla Puppy Linux (I had a Puppy Linux phase in high school so I thought I'd try it out)
-- Xubuntu
+<a name="disclaimers"></a>
+## 4. Disclaimers
 
-I unfortunately cannot remember exactly what worked out-of-the-box with all of these. I am pretty sure that Wifi also worked on Fedora, Manjora, NixOS, and not Puppy. Speakers were not found on any of them. I did not test cameras. Wifi didn't work on Puppy. Bluetooth was finicky on NixOS, though some of the audio stuff I tried was probably responsible for that - I never actually got to testing a connection. I don't think Bluetooth worked for both Manjora and Fedora, but it might have for one of them. Some did not easily support tap-to-click on the mousepad but I didn't earnestly try to enable it on each.
+### 4.1. Warranties & Risk of Bricking
+Modifying the Chromebook firmware and installing Linux on this device can void your warranty and carries an inherent risk of bricking.
+
+### 4.2. Known hardware limitations and risks
+I'll repeat here: Speakers, AUX-IN (headphone jack), Microphone, and tablet-facing camera do not work. Workarounds on the speakers are specifically known to potentially cause permanent damage.
+
+### 4.3. My attempts at addressing the hardware limitations
+While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a more involved process to workaround, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the time and/or skill to sort it out.
+
+---
+
+<a name="installation"></a>
+## 5. Installation & Setup Steps
+
+These steps assume you’ve already replaced the Chromebook’s firmware with something UEFI-capable (e.g., via MrChromebox scripts).
+
+### 5.1. Install Xubuntu
+1. **Flash Xubuntu to a USB-C stick**  
+2. **Boot via UEFI**  
+3. **Install Xubuntu** as you would on any PC.
+
+*I am using Xubuntu 24.04.2 LTS (Noble Numbat)*
+
+### 5.2. (Optional, but Recommended) Enable Tap-to-Click & Natural Scrolling
+By default, Xubuntu’s GUI may not expose these settings. To enable them:
+
+~~~~bash
+sudo mkdir -p /etc/X11/xorg.conf.d
+sudo nano /etc/X11/xorg.conf.d/40-touchpad.conf
+~~~~
+
+Paste:
+
+~~~~conf
+Section "InputClass"
+    Identifier "Touchpad defaults"
+    MatchIsTouchpad "on"
+    Driver "libinput"
+    Option "Tapping" "on"
+    Option "NaturalScrolling" "true"
+EndSection
+~~~~
+
+Save and reboot.
+
+### 5.3. Download/Clone This Project
+Download the .zip, or clone the git repository:
+1. Install Git if needed:
+
+~~~~bash
+sudo apt install git
+~~~~
+
+2. Clone the repo (or download a `.zip`):
+
+~~~~bash
+git clone <URL-of-this-project>
+~~~~
+
+### 5.4. Install Required Packages
+
+In the project root directory:
+
+~~~~bash
+sudo xargs -a packages.txt apt install -y
+~~~~
+
+Installs:
+- `brightnessctl`  
+- `touchegg` (Touché)  
+- `xbindkeys`  
+- `xdotool`  
+- `grep`  
+- `google-chrome-stable`
+
+### 5.5. Copy Project Files to Your Home Directory
+
+~~~~bash
+rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-project/ ~/
+~~~~
+
+**What’s Being Copied?**  
+- **Configuration files** for keyboard mapping, gesture handling, and autostart scripts  
+- **Desktop files** for autostart (like tablet mode handling, XModMap, etc.)  
+- **Custom shell scripts** (for toggling headset mode, linking webcam device, etc.)
+
+You can see a deeper breakdown in [Section 6](#project-file-overview). The autostart `.desktop` files go into `~/.config/autostart/`. If you decide you don’t want one of these services running at login, open **Session and Startup** (in the Xubuntu Settings GUI) and uncheck or remove the relevant entry.
+
+TODO: I need to check if xbindkeys autostart needs to be manually added.
+
+### 5.6. Make Relevant Scripts Executable
+
+~~~~bash
+chmod +x ~/bin/tablet-mode-handler.sh
+chmod +x ~/bin/toggle-headset-mode.sh
+chmod +x ~/bin/detect-webcam.sh
+~~~~
+
+### 5.7. Enable Passwordless Sudo
+
+You need passwordless sudo for:
+- `tablet-mode-handler.sh` (managing tablet mode)
+	+ The tablet event id can change across boots, so sudo is needed to read the device list from libinput.
+- `brightnessctl` (adjusting screen brightness)
+	+ This software appears to require sudo privileges.
+
+Use:
+
+~~~~bash
+sudo visudo
+~~~~
+
+Then add lines like:
+
+~~~~conf
+your-username ALL=(ALL) NOPASSWD: /home/your-username/bin/tablet-mode-handler.sh 
+your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
+~~~~
 
 
+### 5.8. (Optional, but Recommended) Add Keyboard Shortcut for Bluetooth Headset Toggle
 
-## Summary of setting up Chromebook for Linux install
+~~~~bash
+xfconf-query \
+  -c xfce4-keyboard-shortcuts \
+  -p "/commands/custom/<Primary><Alt>h" \
+  -n -t string -s "bin/toggle-headset-mode.sh"
+~~~~
 
-The good news is that you do not need any specialized hardware or tools for this. You'll want to __thoroughly__ read through MrChromebox's [documentation](https://docs.mrchromebox.tech/docs/getting-started.html) before getting in too deep. SPOILER: You will have to do some dissambley of your device to disable hardware firmware write protection, and you will have to wipe your device to enable developer mode.
+Or do this in **Keyboard > Application Shortcuts**.
 
-You can alternatively dual boot ChromeOS and Linux via RW_LEGACY firmware, which should not require disassembly ro disable hardware firmware write protection. However, I had no interest in this since ChromeOS was becoming unusable for me. So I opted fully install UEFI.
+> **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy.
 
-I can confirm for you that as of writing this, The Samsung Chromebook Plus v2 (codename Nautilus) has [UEFI support](https://docs.mrchromebox.tech/docs/supported-devices.html), however you'll want to verify on your end that your device is definitely a Nautilus. You should be able to do this by going to [chrome://version]() in Chrome. If it is not a Nautilus, your device may still be supported but I'm not sure how much of this guide will be applicable to you.
+---
 
-First, you'll enable developer mode, which will wipe your device and boot you into developer mode - which looks a bit different than your desktop probably. If you are still seeing your desktop you are probably not in Developer Mode.
+<a name="project-file-overview"></a>
+## 6. Project File Overview
 
-You will then have to disable write-protection at the hardware level by disconnecting the battery. Of course make sure you are powered off when you do this. This does mean opening up the bottom of the chromebook, but you will not need to do further disassembly. - Then you can boot up while plugged in and running  while plugged in - note that you will need an appropriate charger for this - my higher-powered charger from my other laptop did not work and I had to use a Google proprietary USB-C with wall adapter - I'm sure there are other adapters that work but one that works to charge your chromebook battery will not necessarily work for this. If your device doesn't boot while plugged into your usual charger, do not fret as most likely you just need a different charger. You can look at the first minute of [this video](https://www.youtube.com/watch?v=dKZEH0U9Mto) for guidance on the disassembly.
+All the copied files in `~/` after installation serve different roles, but they can be grouped as follows:
 
-Then, you'll run the MrChromebox firmware utility script. You will want a USB-C flash storage for this, so that you can make a backup of your ChromeOS install (If all goes well, you will not need to use this. But if all does not go well and you do not make this backup, it may be __significantly__ harder to fix your situation.). The firmware utility script will need to reboot once to disable the firmware write protection, then you can install the UEFI ROM firmware.
+### 6.1 Autostart, Input, and Custom Scripts
 
-If you read this far but neglected to read any of MrChromebox's documentation, YOU ARE NOT RESPONSIBLY PREPARED YET TO INSTALL THE NEW FIRMWARE. This is not meant to be a full guide, but just a slight tailoring of MrChromebox's guide to the Nautilus.
+1. **Autostart Desktop Files** (`~/.config/autostart/`)  
+   - **`Tablet Mode Toggle.desktop`**  
+     - Runs `bin/tablet-mode-handler.sh` at login, automatically enabling/disabling your keyboard when you fold the screen.  
+   - **`XModMap.desktop`**  
+     - Applies `.config/keyboardmapping/.Xmodmap` to restore top-row keys (Back, Forward, Mute, Volume, etc.).  
+   - **`touchegg.desktop`**  
+     - Starts the Touché (touchegg) daemon to enable multi-finger gestures.  
+   - **`webcam-link.desktop`**  
+     - (Disabled by default) Runs `detect-webcam.sh` on login, creating a stable `/dev/webcam` symlink.
+ * (also) xbindkey also has an autostart, but it seems to be added and handled by xbindkey itself
 
-# Project overview
+2. **Input Config & Gesture Mapping**  
+   - **`.config/keyboardmapping/.Xmodmap`**  
+     - Remaps many F-row keys to their Chromebook counterparts.  
+     - Lock button is mapped to delete instead.
+   - **`.xbindkeysrc`**  
+     - Handles keys that `xmodmap` can’t, like brightness.  
+     - The window manage key is set to screenshot to clipboard.
+   - **`.config/touchegg/touchegg.conf`**  
+     - Sets up 3-finger swipe gestures for minimize, maximize, and browser back/forward.
+     - Also added 3 finger swipe up/down for maximize/minimize
 
-## How to install
-0. Install Xubuntu by flashing to .iso to a USB-C flash drive device and running through the UEFI Boot menu.
-	- I opted to not force strong passwords and allow passwordless login at startup. I am not 100% sure whether this is required or not for some of the project to work.
-1. Download the source code
-	1. Clone the git repo
-		- If git is not installed, install with `sudo apt install git`
-	2. OR download the .zip and unzip it
-2. In the project root directory, install necessary packages with 
-	- `sudo xargs -a packages.txt apt install -y`
-3. Copy the project files into your home directory.
-	- `rsync -av --exclude 'README.md' --exclude 'packages.txt' path-to-git-repo-code/ ~/`
-4. Make the relevant files executable:
-	 1. `chomd +x ~/bin/tablet-mode-handler.sh`
-	 2. `chmod +x ~/bin/toggle-headset-mode.sh`
-5. Enable passwordless sudo for the tablet-mode-handler.sh script and brightnessctl
-	- `your-username ALL=(ALL) NOPASSWD: /home/your-username/bin/tablet-mode-handler.sh`
-	- `your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl`
-6. Add keyboard shortcut for toggling Bluetooth Headphone/Headset
-	1. Use command `xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Primary><Alt>h" -n -t string -s "bin/toggle-headset-mode.sh"`
-	2. OR, manually navigate to Keyboard > Application Shortcuts > Add, and make the command `bin/toggle-headset-mode.sh` and set it to keys Ctrl+Alt+h, or a keymapping of your choice.
+3. **Custom Scripts** (`~/bin/`)  
+   - **`tablet-mode-handler.sh`**  
+     - Detects and toggles keyboard off/on in tablet mode.  
+   - **`toggle-headset-mode.sh`**  
+     - Switches a Bluetooth device between headphone and headset (mic-enabled) modes.  
+   - **`detect-webcam.sh`**  
+     - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled) `webcam-link.desktop`.
 
-
-## Packages needed to install
-The following packages will be installed by
-
-- brightnessctl
-	+ Allows for changing screen brightness via terminal
-- Touché (touchegg)
-	+ Used for sensing 3-finger gesture controls.
-	+ Config file at `.config/touchegg/touchegg.conf` can be modified for different gesture controls
-- xbindkeys
-	+ Handles some key-binding for F-row keys that XModMap could not handle
-- xdotool
-	+ Handler for some key-binding
-- grep
-	+ Used in some of the bin/ scripts
-- google-chrome-stable
-	+ The stable version of Google Chrome
-	
-## Overview of files byt functionality
-
-### Autostart Applications
-
-These `.desktop` files live in `~/.config/autostart/` and are automatically launched when the user logs in:
-
-- **`Tablet Mode Toggle.desktop`**  
-  Listens for tablet mode (using the script in /bin) and disables the keyboard when tablet mode is enabled. 
-
-- **`XModMap.desktop`**  
-  Runs `xmodmap` in the background on startup, using the configuration at `.config/keyboardmapping/.Xmodmap`. Handles some F-row key remappings including: Back, Forward, Audio Mute, Volume Down, Volume Up, and maps the Lock key to Delete. Other F-row mappings are handled by xkeybind
-
-- **`touchegg.desktop`**  
-  Starts the `touchegg` daemon in the background at login to enable multitouch gesture support.
-
-## Input and Gesture Configuration
-
-- **`.config/keyboardmapping/.Xmodmap`**  
-  Configuration of Xmodmap that handles F-row key remappings including: Back, Forward, Audio Mute, Volume Down, Volume Up, and maps the Lock key to Delete.
-
-- **`.xbindkeysrc`**  
-  Handles additional F-row key mappings that were incompatible with `xmodmap`.  
-  These include:
-  - Brightness Up/Down  
-  - Refresh  
-  - Fullscreen  
-  - Window Manager key (mapped to fullscreen screenshot)
-
-- **`.config/touchegg/touchegg.conf`**  
-  Configures swipe gestures with `touchegg`:
-  - 3-finger swipe up: maximize window  
-  - 3-finger swipe down: minimize window  
-  - 3-finger swipe right: send `Alt_L` (Back in browsers)  
-  - 3-finger swipe left: send `Alt_R` (Forward in browsers)  
-  - Includes Chrome-specific settings for pinch-to-zoom gestures.
-  - Includes some touche default settings.
-
-
-## Application Shortcuts
+### 6.2. Modified Google Chrome Desktop Launcher
 
 - **`.local/share/applications/google-chrome.desktop`**  
-  A modified Chrome launcher that adds the `--disable-features=KeyboardShortcutViewer` flag to prevent interference with F-row remappings.
+  - Adds `--disable-features=KeyboardShortcutViewer` so Chrome doesn’t hijack top-row keys.  
+  - **Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys. It's likely that Chromium also needs this flag.
 
-## Custom Scripts
+---
 
-- **`tablet-mode-handler.sh`**  
-  Contains the logic for monitoring tablet mode status and enabling/disabling the keyboard accordingly.
+<a name="webcam-notes"></a>
+## 7. Webcam Notes
 
-- **`toggle-headset-mode.sh`**  
-  Toggles a connected Bluetooth headset between **headphones** and **headset** mode. Headset mode enables microphone input but typically reduces audio quality.
-  
-- **`detect-webcam.sh`**
-	+ This script is not strictly necessary for basic webcam usage, as your web browser will sense the camera fine. It is disabled by default. However, the /dev/video path of the webcam can change from boot to boot, so this script links the correct device path to /dev/webcam at boot. This could be useful if you ever want to automate something with your webcam.
+- **Works Out of the Box**: The front-facing webcam (labeled something like *720p HD Camera*) typically works fine without the `detect-webcam.sh` script. However, you might see multiple `/dev/videoX` devices in some apps, and only one of them is the real camera feed.  
+- **Symlink Behavior**: If you do enable `detect-webcam.sh`, you can then run:  
+  ~~~~bash
+  guvcview -d /dev/webcam
+  ~~~~
+  to confirm it opens your live camera feed.
+  - **Cheese & ffplay** often don’t accept an explicit `/dev/webcam` argument, but they still pick up the camera automatically. 
+- **Tablet-Facing Camera**:  
+  - Currently not detected at all in Linux.  
+  - I haven’t explored possible fixes, so I can’t speculate on how to get it running.
 
-## Webcam notes
+---
 
-You can confirm the detect webcam script works after running it (may need to make it executable first), and using the command `guvcview -d /dev/webcam`. If the command opens a your camera feed without further prompting, it works, and /dev/webcam links to your webcam, and should across boots if the startup script is enabled. Note that you can also use cheese and ffplay to test your camera is working, but specifying the device/device link doesn't seem to work wtih cheese and ffplay.
+<a name="who-is-this-for"></a>
+## 8. Who This Project Is For & Distro Observations
 
+- **Primary Focus**: A single-user laptop experience that mimics Chromebook shortcuts.  
+- **Not (necessarily) a Power-Linux Layout**: You can adapt these configs for more complex setups if you wish, but out-of-the-box, it’s intended for a straightforward, ChromeOS-like environment.
+
+### Distros I Tried
+- **Xubuntu**  
+- **NixOS**  
+- **Manjaro**  
+- **Fedora**  
+- **Vanilla Puppy**
+
+I can't remember specifically what worked and didn't, but most distros besides Xubuntu had something that wasn't easily working out-of-the-box.  Wifi, Bluetooth, and tap-to-click are all issues I remember running into. I most earnestly tried NixOS as I really wanted to use it. I even tried the audio fix script from chrultrabook, but that didn't work, and Bluetooth was spotty across different configuration.nix builds.
+
+---
+
+<a name="performance-notes"></a>
+## 9. Performance Notes
+
+- **Overall Performance**: Excellent. The Intel Core m3 processor handles everyday tasks smoothly under Xubuntu (web, media, notetaking app with stylus, etc.).  
+- **Battery Life**:  
+  - I don’t have precise measurements yet because I’ve been doing heavy installs and testing.  
+  - It might drain a bit faster than ChromeOS did, but still significantly better than my i7 ultrabook in comparable usage.  
+  - Under typical (light) usage, you could still see very good battery life—just not necessarily identical to ChromeOS.
+- **Miscellaneous**:  
+  - I tried installing OpenBoard to try even more stylus apps, but had trouble getting dependencies to work. Krita and Xournal++ seem to work great though. At least as smooth as the ChromeOS/Android options I used before. 
+
+# UEFI Firmware Installation (Non-Comprehensive Summary)
+
+*This is **not** a full guide. Before proceeding, thoroughly read [MrChromebox’s documentation](https://docs.mrchromebox.tech/docs/getting-started.html). The steps below are only additional notes specific to the Samsung Chromebook Plus v2 (Nautilus).*
+
+1. **Tools Needed**  
+   - A small screwdriver  
+   - A thin-edged tool (e.g., a small plastic pry tool or a blunt knife) to help gently pop off the back cover
+   - A USB-C flash drive  
+   - A USB-C charger that can power the device *without* its battery connected (**Note**: higher-watt chargers are unlikely to work; your safest option is the official Google charger. You could test this out before making irreversible software changes, but doing so could still void warranties pottentially.)  
+
+2. **Check Device Compatibility**  
+   - Verify that your Chromebook is the Samsung Chromebook Plus v2 (codename “Nautilus”).  
+   - If unsure, open `chrome://version` in Chrome to confirm.  
+   - At time of this writing, Nautilus is supported my the MrChromebox tools. You can double check [here](https://docs.mrchromebox.tech/docs/supported-devices.html)
+
+3. **Developer Mode**  
+   - Enabling Developer Mode **will** wipe the device.  
+   - After doing so, you’ll boot into a Developer Mode environment (not the standard ChromeOS desktop).  
+
+4. **Hardware Write Protection**  
+   - You must disable write protection at the hardware level by removing the bottom cover and disconnecting the battery.  
+   - With the battery unplugged, you must power the device via a suitable USB-C charger.  
+
+5. **Install the Firmware**  
+   - Use a USB-C flash drive for creating a backup of your existing firmware (strongly recommended). The firmware tool walks you through this.  
+   - Run the MrChromebox firmware utility script. It will require a reboot to disable firmware write protection, then proceed with installing the UEFI ROM.  
+
+6. **Alternative: RW_LEGACY**  
+   - If you prefer dual-booting ChromeOS and Linux, you can install RW_LEGACY firmware instead, which *usually* does not require disabling hardware write protection.  
+   - This guide focuses on full UEFI firmware replacement.  
+   - I did not attempt this at all so I have not first-hand experience.
+
+**Important:** If you read this far but have *not* gone through MrChromebox’s documentation in detail, you are *not* prepared to do this responsibly. These steps only provide brief notes for Nautilus devices; the official MrChromebox documentation remains your primary reference.
