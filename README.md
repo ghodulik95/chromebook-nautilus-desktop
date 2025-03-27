@@ -392,10 +392,10 @@ Confirm everything is working:
 
 1. Flip into tablet mode. You should get a notification and you can confirm the keyboard is disabled and re-enabled when you exit tablet mode.
 2. Open Chrome (or your preferred browser) normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen. You should see little arrow navigations for back/forward/refresh in browsers. (If you are using a browser I did not add support for, adding support is very easy by following instructions in the comments of `~/.config/touchegg/touchegg.conf`. You can also easily disable the animations here.)
-3. Test brightness and volume keys. (The volume keys should still be responsive even without connected to Bluetooth. This should still be responsive without having a Bluetooth device connected.)
+3. Test brightness and volume keys. (The volume keys should still be responsive even without a connected Bluetooth device.)
 4. Confirm the "lock" key actually is "Delete". 
 	- (This is not standard ChromeOS functionality, but I made an assumption that most Linux users would prefer to have a Delete key, which is otherwise not present on the keyboard. If you prefer a lock/sleep behavior, there is guidance on how to do that in the comments of `.config/keyboardmapping/.Xmodmap`)
-5. Test bluetooth headset audio toggle (Ctrl+Alt+h if using default keymapping).
+5. Test bluetooth headset audio toggle (Ctrl+Alt+h if using default keymapping). Without a Bluetooth device connected, you should still see a "No Bluetooth Headset found" notification.
 6. If using the detect-webcam script, you can test with `guvcview -d /dev/webcam` (requires installing guvcview). If the camera opens with no additional prompting, the symlink worked.
 	+ Note that `cheese` and `ffplay` did not seem to cooperate with specifying devices at command line, so if you test with these, it may appear the symlink did not work. This is why I recommend testing with `guvcview`.
 7. Test that the window manage key captures a screenshot to clipboard. There should be a quick notification.
@@ -547,7 +547,7 @@ Check stdout to see if gestures are detected. If not, verify that `~/.config/tou
 			/dev/video1
 			/dev/media0
 	
-	The device ids listed can vary across booths. The first /dev/video* entry should be the correct one.
+	The device ids listed can vary across boots. The first /dev/video* entry should be the correct one.
 
 - **Test with GUVCView or Cheese**  
    	Replacing /dev/video0 with the path from above:
@@ -654,7 +654,7 @@ I can't remember specifically what worked and didn't, but most distros besides X
 	+ The only times I noticed (mildly) concerning lag was when I was running a heavy apt install with multiple other things open.
 
 - **Battery Life**:  
-  - I don’t have precise or everyday-use measurements yet because I’ve been doing consistently doing heavy installs and testing.  
+  - I don’t have precise or everyday-use measurements yet because I’ve been consistently doing heavy installs and testing.  
   - It might drain a bit faster than ChromeOS did, but still significantly better than my i7 ultrabook in comparable usage.  
   - Under typical (light) usage, you could still see very good battery life—just not necessarily identical to how it was ChromeOS at my machine's prime.
 
