@@ -92,7 +92,7 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
    - Disables the keyboard automatically when the screen is folded into tablet position, then re-enables it afterward.
 
 3. **Swipe Navigation**  
-   - Implements 3-finger swipes for browser back/forward (mimicking ChromeOS-style gestures). 
+   - Implements 3-finger swipes for browser back/forward (mimicking ChromeOS-style gestures), including cute hacky custom animations. 
    - Confirmed to work with Google Chrome, Firefox, Tor Browser, Opera, Vivaldi,Brave, and Falkon (minor configuration needed to add support for gesture nav on other browsers)
    - 2-finger gestures not supported.
 
@@ -174,6 +174,7 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
     	chmod +x ~/bin/tablet-mode-handler.sh
     	chmod +x ~/bin/toggle-headset-mode.sh
    		chmod +x ~/bin/detect-webcam.sh
+   		chmod +x ~/bin/gesture-flash.sh
 
 
 6. **Enable Passwordless Sudo**  
@@ -378,7 +379,7 @@ Or do this in **Keyboard > Application Shortcuts**. Feel free to modify the keym
 Confirm everything is working:
 
 1. Flip into tablet mode. You should get a notification and you can confirm the keyboard is disabled and re-enabled when you exit tablet mode.
-2. Open Chrome normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen. **Note that there is unfortunately no cute arrow animation like in ChromeOS, so if a specific web page is being unresponsive to back/forward/refresh, it may look like nothing is happening.** Be sure to test multiple pages before concluding that it didn't work. (I have created a script for animations in another branch but ran into issues getting Touché to execute commands.)
+2. Open Chrome normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen. You should see little arrow navigations for back/forward/refresh in browsers.
 3. Test brightness and volume keys. (The volume keys should still be responsive even without connected to Bluetooth.)
 4. Confirm the "lock" key actually is "Delete". 
 	- (This is not standard ChromeOS functionality, but I made an assumption that most Linux users would prefer to have a Delete key, which is otherwise not present on the keyboard. If you prefer a lock/sleep behavior, there is guidance on how to do that in the comments of `.config/keyboardmapping/.Xmodmap`)
@@ -443,6 +444,8 @@ All the copied files in `~/` after installation serve different roles, but they 
      - Detects and toggles keyboard off/on in tablet mode.  
    - **`toggle-headset-mode.sh`**  
      - Switches a Bluetooth device between headphone (A2DP) and headset (HSP/HFP) with mic enabled.  
+   - **`gesture-flash.sh`**
+   	 - Creates quick fading back/forward/refresh animations 
    - **`detect-webcam.sh`**  
      - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled by default) `webcam-link.desktop`.
 
@@ -455,8 +458,8 @@ All the copied files in `~/` after installation serve different roles, but they 
 | `~/.config/autostart/XModMap.desktop`                   | Applies `.config/keyboardmapping/.Xmodmap` for Chromebook-like top-row keys (Back, Refresh, Volume, etc.).                          | Required for full Chromebook-like key behavior                         |
 | `~/.config/keyboardmapping/.Xmodmap`                    | Remaps F-row keys to Chromebook equivalents, including making the "lock" key act as Delete.                                         | Required for full Chromebook-like key behavior                         |
 | `~/.xbindkeysrc`                                        | Handles brightness, screenshot, and other bindings that Xmodmap alone doesn’t cover. This is the default xbindkeys config filepath.                                                | Required for full Chromebook-like key behavior                         |
-| `~/.config/autostart/touchegg.desktop`                  | Starts **Touché** (the `touchegg` daemon) at login, enabling multi-finger gestures (e.g., 3-finger swipes to navigate).             | Required for gesture navigation |
 | `~/.config/touchegg/touchegg.conf`                      | Defines gesture mappings (e.g., 3-finger swipes for browser back/forward, minimize, maximize). This is the default touchegg config filepath.                                      | Required for gesture navigation                             |
+| `~/bin/gesture-flash.sh`                      | Called by touchegg to create forward/back/refresh animations    | Optional. Disable by replacing \<command> tags in touchegg.conf with the commented-out versions that omit calling gesture-flash.sh                            |
 | `~/bin/toggle-headset-mode.sh`                          | Toggles Bluetooth device mode between headphone (A2DP) and headset (HSP/HFP) with mic enabled.                                      | Recommended if you use BT headphones + mic (e.g. video calls)          |
 | `~/bin/detect-webcam.sh`                                | Finds the correct camera device (e.g., `/dev/video2` can vary across boots) and symlinks it to `/dev/webcam`.                       | Optional                                                               |
 | `~/.config/autostart/webcam-link.desktop`               | (Disabled by default) Runs `detect-webcam.sh` to create a stable `/dev/webcam` symlink.                                             | Optional — recommended if you use your camera via command-line/code a lot.   |
@@ -489,7 +492,7 @@ Below are some issues you could run into.
     chmod +x ~/bin/tablet-mode-handler.sh
 
 - **Check Sudoers**  
-  If the script runs commands needing sudo (like `libinput debug-events`), confirm you’ve set `NOPASSWD:` for your username.
+  The script uses `libinput list-devices` which requires sudo. Confirm this script has passwordless sudo with `sudo visudo`
   
 - **Ensure autostart rule is enabled**
 
@@ -501,11 +504,9 @@ Below are some issues you could run into.
 ### 8.4 Multi-Finger Gestures Not Working
 
 - **Confirm Touché Daemon**  
-    touchegg --debug  
+    - touchegg --debug  
   Check if gestures are detected. If not, verify that `~/.config/touchegg/touchegg.conf` is loaded and `touchegg.desktop` is enabled on startup.
-  - TODO: Need to better understand and document how touchegg works for this, and see if maximazion is still weird after restart
-  - TODO: Now that I think some issues are fixed with removing the user autostart, want to see if running commands works
-
+  
 ### 8.5 Webcam Issues
 
 - **Check Video Devices**  
@@ -513,15 +514,15 @@ Below are some issues you could run into.
 
 - **Test with GUVCView or Cheese**  
     guvcview -d /dev/video2  
-  or open Cheese to confirm live video feed.
+  or open `cheese` and manually select the 720p HD Camera, which should be the webcam.
 
 - **Symlink**  
-  If multiple devices exist, enable `webcam-link.desktop` to consistently link `/dev/webcam`.
+  If you are using an application that requires a consistent device id, enable `webcam-link.desktop` to consistently link `/dev/webcam`.
 
 ### 8.6 Key Mappings Revert After Reboot
 
 - **Ensure XModMap Autostart**  
-  Verify `XModMap.desktop` is enabled in **Session and Startup**. Some systems may require a short delay or running it in `.xprofile` to stick reliably.
+  Verify `XModMap.desktop` is enabled in **Session and Startup**.
 
 ### 8.7 Notable Debugging Tools/Commands
 
