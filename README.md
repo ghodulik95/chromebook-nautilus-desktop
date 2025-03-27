@@ -1,7 +1,7 @@
 <a name="top"></a>
 # Customized Desktop Environment for Xubuntu on the Samsung Chromebook Plus v2 (Nautilus)
 
-So you’ve installed (or want to install) Linux on your beloved Samsung Chromebook Plus v2 (Nautilus) but don’t want to deal with improper key mappings, poor tablet-mode handling, or missing ChromeOS conveniences (e.g., gesture navigation). Don’t worry—this repository should help! I have found these modifications sufficiently address those issues, at least for my needs.
+So you’ve installed (or want to install) Linux on your beloved Samsung Chromebook Plus v2 (Nautilus) but don’t want to deal with improper key mappings, poor tablet-mode handling, or missing ChromeOS conveniences (e.g., gesture navigation). Don’t worry—this repository should help! I have found these modifications sufficiently address those needs.
 
 ### Tested configuration
 
@@ -19,15 +19,15 @@ More disclaimers and limitations are noted in [disclaimers](#disclaimers) and [l
 
 ### Other Linux distributions?
 
-[Section 10](#who-is-this-for) describes other distros I tested (NixOS, Manjaro, Fedora, Vanilla Puppy), highlighting some hardware compatibility issues I encountered before ultimately choosing Xubuntu. In short, Xubuntu provided the best out-of-the-box experience among these options—even though NixOS was my first preference.
+[Section 10](#who-is-this-for) describes other distros I explored (NixOS, Manjaro, Fedora, Vanilla Puppy) before ultimately choosing Xubuntu. I highlight some hardware compatibility issues I encountered with each OS. In short, Xubuntu provided the best out-of-the-box experience among these options—even though NixOS was my first preference. This is why I chose Xubuntu to ultimately further customize. The modifications in this project were not tested with those other distros I tried.
 
 ### Current experience
 
-I have not run extensive stress tests on my Nautilus, but it’s currently running *wonderfully* for all my old Chromebook use cases and QOL preferences. Even the stylus works great with Krita and Xournal++, including pressure sensitivity and palm rejection. And it is *significantly* speedier than ChromeOS had been running, even after a powerwash. [Performance notes](#performance-notes) contains some more details.
+I have not run extensive stress tests on my Nautilus, but it’s currently running *wonderfully* for all my old Chromebook use cases and QOL preferences. Touch screen is great, even the stylus works great with Krita and Xournal++, including pressure sensitivity and palm rejection. And it is *significantly* speedier than ChromeOS had been running, even after a powerwash. [Performance notes](#performance-notes) contains some more details.
 
 ### Hardware limitations
 
-Finally, please note that there are some serious hardware limitations related to the internal speakers, microphone, and the tablet-facing camera (the [normal webcam functions fine](#webcam-notes). See the [limitations](#limitations) and [disclaimers](#disclaimers) for more details. **You have been warned.**
+Finally, please note that there are some serious hardware limitations related to the internal speakers, microphone, and the tablet-facing camera (the [normal webcam functions fine](#webcam-notes)). See the [limitations](#limitations) and [disclaimers](#disclaimers) for more details. **You have been warned.**
 
 
 ---
@@ -60,7 +60,7 @@ While Linux can run very well on the Samsung Chromebook Plus v2 Nautilus, there 
 
 1. **Speakers do not work**  
 2. **Microphone does not work**  
-3. **AUX headphone jack does not work**  
+3. **Aux headphone jack does not work**  
 4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
 
 If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
@@ -92,8 +92,8 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
    - Disables the keyboard automatically when the screen is folded into tablet position, then re-enables it afterward.
 
 3. **Swipe Navigation**  
-   - Implements 3-finger swipes for browser back/forward (mimicking ChromeOS-style gestures), including cute hacky custom animations. 
-   - Confirmed to work with Google Chrome, Firefox, Tor Browser, Opera, Vivaldi, Brave, and Falkon (minor configuration to `touchegg.conf` needed to add support for gesture nav on other browsers)
+   - Implements 3-finger swipes for browser back/forward/refresh (mimicking ChromeOS-style gestures), including cute hacky custom animations (that are easy to disable). 
+   - Confirmed to work with Google Chrome, Firefox, Tor Browser, Opera, Vivaldi, Brave, and Falkon (minor configuration to `touchegg.conf` needed to add support for gesture nav on other browsers). (*Aside note: I installed these browsers to confirm gesture support. While they seemed to run well, my use of them was very minimal so I'm not sure how well they run overall.*)
    - 2-finger gestures not supported.
 
 4. **Bluetooth Headphone/Headset Toggle**  
@@ -130,13 +130,13 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
 __This project is not affiliated with or endorsed by Google or Samsung__.
 
 ### 4.1. Warranties & Risk of Bricking
-Modifying the Chromebook firmware and installing Linux on this device can void your warranty and carries an inherent risk of bricking.
+Modifying the Chromebook firmware and installing Linux on this device can void your warranty and carries an inherent risk of bricking. Use of this project assumes you have already done this, but I'm just putting this here anyway.
 
 ### 4.2. Known hardware limitations and risks
 I'll repeat here: internal speakers, headphone jack, microphone, and tablet-facing camera do not work. Workarounds on the speakers are specifically known to potentially cause permanent damage. See [Limitations](#limitations).
 
 ### 4.3. My attempts at addressing the hardware limitations
-While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a very involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the capacity to spend several hours sorting it out (and possibly come up empty). If that founds like a fun challenge for you, though, then awesome. Please let me know how it goes.
+While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a very involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the capacity to spend several hours sorting it out (and possibly come up empty). If that sounds like a fun challenge for you, though, then awesome. Please let me know how it goes.
 
 ---
 
@@ -152,7 +152,7 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
    - Either `git clone https://github.com/ghodulik95/chromebook-nautilus-desktop.git` or download the ZIP to your new Xubuntu install.
 
 2. **Install Required Packages**  
-    The package projects include brightnessctl grep xbindkeys xdotool libinput-tools touchegg and google-chrome-stable (requires adding official repository link). You can install with this command to make sure you use the same versions as I did (probably just using system defaults will work just fine though).
+    The package projects include brightnessctl, grep, xbindkeys, xdotool, libinput-tools, touchegg (requires adding official repository link), imagemagick, yad, x11-utils, google-chrome-stable (requires adding official repository link). You can install with this command to make sure you use the same versions as I did (using system defaults will probably work just fine though).
     
 		cd path/to/project
 		sed '/^\s*#/d;/^\s*$/d' packages.txt | xargs sudo apt install -y
@@ -221,7 +221,7 @@ Paste:
         Option "NaturalScrolling" "true"
     EndSection
 
-Save and reboot/logout and back in. *I have not looked into momentum scrolling so I cannot say how easy or difficult that is to enable or implement. I might look into it in the future.*
+Save and reboot/logout and back in. *I have not looked into mousepad momentum scrolling so I cannot say how easy or difficult that is to enable or implement. I might look into it in the future. I have found the default mousepad scrolling sensitivity great. Touchscreen momentum scrolling DOES work (at least on Chrome).*
 
 ### 6.3. Add necessary repositories
 
@@ -239,6 +239,8 @@ You can skip if you do not want to use Google Chrome.
     echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] https://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 
     sudo apt update
+
+You could also download via browser from Google's official website and install that way (just note this when installing packages, and skip over the google-chrome-stable package).
 
 ### 6.4. Download/Clone This Project
 
@@ -294,7 +296,7 @@ you will also need to install v4l-utils. This can be done with the below command
 
 ### 6.6. Modifying the Google Chrome Launcher
 
-To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Refresh, Fullscreen), you’ll need to modify its `.desktop` launcher. (When I tested, Vivaldi and Brave worked without customization, but it is possible some Chromium and Chromium-based browsers could need this.)
+To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Refresh, Fullscreen), you’ll need to modify its `.desktop` launcher. (When I tested, Vivaldi and Brave worked without customization, but it is possible some Chromium and Chromium-based browsers could need this too.)
 
 1. **Copy the system launcher to your local applications directory**:
 
@@ -333,7 +335,7 @@ To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Ref
 
 *Note that there are several Exec= lines for different launching options, and it is recommended to add the flag to each so that your top-row keys work as expected at all times.*
 
-**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys and will not interpret them appropriately. It's possible that Chromium and other Chromium-based browsers would need this flag. However, Vivaldi and Brave seemed to work fine.
+**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys and will not interpret them appropriately. It's possible that Chromium and other Chromium-based browsers would need this flag. However, Vivaldi and Brave (both Chromium-based to my knowledge) seemed to work fine.
 
 ### 6.7. Copy Project Files to Your Home Directory
 
@@ -351,6 +353,7 @@ You can see a deeper breakdown in [Section 7](#project-file-overview). The autos
     chmod +x ~/bin/tablet-mode-handler.sh
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
+    chmod +x ~/bin/gesture-flash.sh
 
 *For a tabular breakdown of what these scripts do, see [this table in section 7](#tabular)*
 
@@ -381,15 +384,15 @@ Then add lines like (replacing your-username 3 times with your username):
 
 Or do this in **Keyboard > Application Shortcuts**. Feel free to modify the keymapping in the command or in the GUI if you do not want to use Ctrl+Alt+H.
 
-> **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy. Because the webcam device id can change across boots, applications might not operate consistently (more on that in [webcam notes](#webcam-notes).
+> **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy. Because the webcam device id can change across boots, applications might not operate consistently (more on that in [webcam notes](#webcam-notes)).
 
 ### 6.11. Log out and back in, or reboot.
 
 Confirm everything is working:
 
 1. Flip into tablet mode. You should get a notification and you can confirm the keyboard is disabled and re-enabled when you exit tablet mode.
-2. Open Chrome normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen. You should see little arrow navigations for back/forward/refresh in browsers.
-3. Test brightness and volume keys. (The volume keys should still be responsive even without connected to Bluetooth.)
+2. Open Chrome (or your preferred browser) normally, and you can test the 3-finger swiping for back and forward, and the top row keys for back, forward, refresh, and fullscreen. You should see little arrow navigations for back/forward/refresh in browsers. (If you are using a browser I did not add support for, adding support is very easy by following instructions in the comments of `~/.config/touchegg/touchegg.conf`. You can also easily disable the animations here.)
+3. Test brightness and volume keys. (The volume keys should still be responsive even without connected to Bluetooth. This should still be responsive without having a Bluetooth device connected.)
 4. Confirm the "lock" key actually is "Delete". 
 	- (This is not standard ChromeOS functionality, but I made an assumption that most Linux users would prefer to have a Delete key, which is otherwise not present on the keyboard. If you prefer a lock/sleep behavior, there is guidance on how to do that in the comments of `.config/keyboardmapping/.Xmodmap`)
 5. Test bluetooth headset audio toggle (Ctrl+Alt+h if using default keymapping).
@@ -406,7 +409,7 @@ Confirm everything is working:
 	- You might want to enable Window snapping to other windows in Window Manager > Advanced.
 2. In Window Manager Tweaks > Compository, you can modify opacity of windows when they are moving or inactive.
 3. Since I didn't have a use case for the Window manager key (right of the fullscreen key), I mapped this to do a fullscreen screenshot to clipboard. If you'd prefer a different mapping, modify `~/.xbindkeysrc`.
-4. Touché has a lot more potential use for more complex swipe navigation. I only added rules for 3-finger swiping for back/forward/maximize/minimize and pinch-to-zoom. Modications can be made to `~/.config/touchegg/touchegg.conf`. I have noticed though that Touché seems a bit out of maintenance and I cannot get terminal commands to execute from gestures.
+4. Touchégg has a lot more potential use for more complex swipe navigation. I only include rules for 3-finger swiping for back/forward/refresh/maximize/minimize and 2-finger pinch-to-zoom (note that maximize, minimize and pinch-to-zoom were provided by the default config). Modications can be made to `~/.config/touchegg/touchegg.conf`.
 5. Pretty much any other Xubuntu/Xfce configurations you want.
 
 <a name="project-file-overview"></a>
@@ -421,10 +424,11 @@ All the copied files in `~/` after installation serve different roles, but they 
 
 1. **Autostart Desktop Files** (`~/.config/autostart/`)  
    - **`Tablet Mode Toggle.desktop`**  
-     - Runs `bin/tablet-mode-handler.sh` at login, automatically enabling/disabling your keyboard when you fold the screen.  
+     - Runs `bin/tablet-mode-handler.sh` at login, starting a process that listens for input events so it can automatically enable/disable your keyboard when you fold the screen.  
      - This file was originally generated by Xubuntu’s autostart manager.
    - **`XModMap.desktop`**  
      - Applies `.config/keyboardmapping/.Xmodmap` to restore top-row keys (Back, Forward, Mute, Volume, etc.).  
+     - Note that some of the top-row mappings are handled by xbindkeys instead.
      - This file was originally generated by Xubuntu’s autostart manager.
    - **`touchegg.desktop`**  
      - Starts the Touché daemon (the `touchegg` package) to enable multi-finger gestures.  
@@ -433,7 +437,7 @@ All the copied files in `~/` after installation serve different roles, but they 
      - (Disabled by default, as most users probably won't need this) Runs `detect-webcam.sh` on login, creating a stable `/dev/webcam` symlink.
      - This file was originally generated by Xubuntu’s autostart manager.
 
-* (Also, note xbindkeys should add its own autostart under `/etc/xdg/autostart/xbindkeys.desktop` or `/usr/share/xsessions/xbindkeys.desktop`; if not, you’d need to manually add an autostart rule at the user or system level.)*
+* *(Also, note xbindkeys should add its own autostart under `/etc/xdg/autostart/xbindkeys.desktop` or `/usr/share/xsessions/xbindkeys.desktop`; if not, you’d need to manually add an autostart rule at the user or system level.)*
 
 2. **Input Config & Gesture Mapping**  
    - **`.config/keyboardmapping/.Xmodmap`**  
@@ -445,7 +449,7 @@ All the copied files in `~/` after installation serve different roles, but they 
      - The window manage key is set to screenshot to clipboard.
      - This file contains many of the default contents from running xbindkeys --defaults (which outputs a sample/default configuration).
    - **`.config/touchegg/touchegg.conf`**  
-     - Defines gesture mappings (e.g., 3-finger swipes for browser back/forward, refresh, maximize, minimize (commented out)).
+     - Defines gesture mappings (e.g., 3-finger swipes for browser back/forward, refresh, maximize, minimize, pinch-to-zoom).
      - This file contains many of the default contents created after first launching touchegg or running touchegg --generate-config.
 
 3. **Custom Scripts** (`~/bin/`)  
@@ -468,11 +472,10 @@ All the copied files in `~/` after installation serve different roles, but they 
 | `~/.config/keyboardmapping/.Xmodmap`                    | Remaps F-row keys to Chromebook equivalents, including making the "lock" key act as Delete.                                         | Required for full Chromebook-like key behavior                         |
 | `~/.xbindkeysrc`                                        | Handles brightness, screenshot, and other bindings that Xmodmap alone doesn’t cover. This is the default xbindkeys config filepath.                                                | Required for full Chromebook-like key behavior                         |
 | `~/.config/touchegg/touchegg.conf`                      | Defines gesture mappings (e.g., 3-finger swipes for browser back/forward, minimize, maximize). This is the default touchegg config filepath.                                      | Required for gesture navigation                             |
-| `~/bin/gesture-flash.sh`                      | Called by touchegg to create forward/back/refresh animations    | Optional. Disable by replacing \<command> tags in touchegg.conf with the commented-out versions that omit calling gesture-flash.sh                            |
+| `~/bin/gesture-flash.sh`                      | Called by Touchégg to create forward/back/refresh animations    | Optional. Disable by replacing \<command> tags in touchegg.conf with the commented-out versions that omit calling gesture-flash.sh                            |
 | `~/bin/toggle-headset-mode.sh`                          | Toggles Bluetooth device mode between headphone (A2DP) and headset (HSP/HFP) with mic enabled.                                      | Recommended if you use BT headphones + mic (e.g. video calls)          |
 | `~/bin/detect-webcam.sh`                                | Finds the correct camera device (e.g., `/dev/video2` can vary across boots) and symlinks it to `/dev/webcam`.                       | Optional                                                               |
 | `~/.config/autostart/webcam-link.desktop`               | (Disabled by default) Runs `detect-webcam.sh` to create a stable `/dev/webcam` symlink.                                             | Optional — recommended if you use your camera via command-line/code a lot.   |
-| `~/.local/share/applications/google-chrome.desktop`      | Custom Chrome launcher with `--disable-features=KeyboardShortcutViewer` to prevent Chrome from stealing top-row keys.               | Recommended for Chrome users                                           |
 
 
 ---
@@ -488,55 +491,105 @@ Below are some issues you could run into.
 ### 8.1 Brightness Keys Not Working
 
 - **Check if `xbindkeys` is running**  
-    pgrep -laf xbindkeys  
-  If there’s no output, try `xbindkeys` manually or create a `.desktop` file in `~/.config/autostart/` to start it.
+
+		pgrep -laf xbindkeys  
+  
+  If there’s no output, try `xbindkeys` manually or create a `.desktop` file in `~/.config/autostart/` or via GUI to start it.
 
 - **Test Manual Brightness**  
-    brightnessctl s 50  
-  If you can set brightness manually, your bindings or permissions may be misconfigured.
+
+    	brightnessctl s 50  
+    	
+  If you can set brightness manually, your bindings or permissions may be misconfigured. (Probably requires sudo)
 
 ### 8.2 Tablet Mode Doesn’t Disable the Keyboard
 
 - **Ensure `tablet-mode-handler.sh` is executable**  
-    chmod +x ~/bin/tablet-mode-handler.sh
+    
+    	chmod +x ~/bin/tablet-mode-handler.sh
 
 - **Check Sudoers**  
   The script uses `libinput list-devices` which requires sudo. Confirm this script has passwordless sudo with `sudo visudo`
   
 - **Ensure autostart rule is enabled**
 
-### 8.3 No Speaker, AUX Audio (headphone jack), or tablet-facing camera
+### 8.3 No Speaker, aux audio (headphone jack), or tablet-facing camera
 
 - **[Known Device Limitation](#limitations)**  
-  The internal speakers, microphone, and headphone jack don’t work out-of-the-box on the Samsung Chromebook Plus v2. Use Bluetooth or attempt advanced fixes at your own risk.
+  The internal speakers, microphone, and headphone jack don’t work out-of-the-box on the Samsung Chromebook Plus v2 (or potentially at all). Use Bluetooth. Attempt advanced fixes at your own risk.
 
 ### 8.4 Multi-Finger Gestures Not Working
 
-- **Confirm Touché Daemon**  
-    - touchegg --debug  
-  Check if gestures are detected. If not, verify that `~/.config/touchegg/touchegg.conf` is loaded and `touchegg.desktop` is enabled on startup.
+- **Confirm Touché Daemon is running**  
+There should be a system service daemon running:
+
+		systemctl status touchegg
+A debug process can be started with
+
+	touchegg --debug  
+		
+Check stdout to see if gestures are detected. If not, verify that `~/.config/touchegg/touchegg.conf` is loaded and autostart rule is present and enabled.
+
+- It's been my experience that installing new UI packages can break Touché processes or cause them to glitch temporarily. A reboot should fix this.
+- Refer to Touché [documentation](https://github.com/JoseExposito/touchegg) for more guidance. 
   
 ### 8.5 Webcam Issues
 
 - **Check Video Devices**  
-    ls /dev/video*  
+
+    	v4l2-ctl --list-devices
+    	
+	The webcam should be something like
+	
+		720p HD Camera: 720p HD Camera (usb-0000:00:14.0-9):
+			/dev/video0
+			/dev/video1
+			/dev/media0
+	
+	The first /dev/video* entry should be the correct one. These can vary across boots.
 
 - **Test with GUVCView or Cheese**  
-    guvcview -d /dev/video2  
-  or open `cheese` and manually select the 720p HD Camera, which should be the webcam.
+   	Replacing /dev/video0 with the path from above:
+    	
+    	guvcview -d /dev/video*
+    
+  or open `cheese` or `ffplay` and manually select the 720p HD Camera, which should be the webcam. Specifying a device id in terminal with `cheese` and `ffplay` does not work in my experience. (There may be multiple entries with this device naming. Be sure to check each of them. Only one is expected to work.)
 
 - **Symlink**  
-  If you are using an application that requires a consistent device id, enable `webcam-link.desktop` to consistently link `/dev/webcam`.
+  If you are using an application that requires a consistent device id, enable `webcam-link.desktop` to consistently link the device id to `/dev/webcam` on startup.
 
 ### 8.6 Key Mappings Revert After Reboot
 
-- **Ensure XModMap Autostart**  
+- **Ensure XModMap autostart**  
   Verify `XModMap.desktop` is enabled in **Session and Startup**.
+-- **Ensure xbindkeys autostart**  
+  Verify that an autostart entry for **xbindkeys** is enabled in **Session and Startup**.  
+  On my system, `xbindkeys` created this automatically during installation. If that didn’t happen for you, you’ll need to manually add one that calls `xbindkeys_autostart` (which should handle stuff config updates and other process handling stuff, making it less likely to need to restart if there's some crash). 
   
 ### 8.7 Back button key, Forward button key, Refresh key, other top-level keys not working on Chrome
 Google Chrome may intercept top-level keys. Be sure you are running with the proper flags. See [Installation instructions](#installation) for how to make sure to launch Chrome with these flags by default. Possibly updating Chrome could require you to redo this step.
 
-### 8.8 Notable Debugging Tools/Commands
+### 8.8 XYZ is having package issues
+Make sure necessary packages are installed. Consider running `sudo apt update` and/or `sudo apt upgrade`
+
+The functionalities have package dependenceis as follows:
+| Functionality                     | Package Dependencies                                           |
+|----------------------------------|----------------------------------------------------------------|
+| Keymappings                      | xbindkeys, xdotool, xmodmap, brightnessctl, xfce4-screenshooter |
+| Table mode                       | libinput-tools                                                 |
+| Gesture navigation with animations | touchegg, yad, x11-utils, imagemagick, xdotool                |
+| Detect and symlink camera        | v4l-utils                                                      |
+
+For all but touchegg, you should be able to just use the default Xubuntu packages and install with `sudo apt install`.
+
+### 8.9 Gesture navigation issues
+- Make sure you have added the touchegg repository and installed properly. The default package provided by Xubuntu will not have work with all features of this project. See [installation](#installation) for more guidance.
+- Make sure ~/.config/touchegg/touchegg.conf is present and contains the gestures
+- Make sure touchegg dependencies are installed and up to date
+- Confirm the touchegg daemon is running with `systemctl status touchegg`
+- Run `touchegg --verbose` to confirm that a touchegg process is able to attach to the daemon, and see if gestures are detected.
+
+### 8.10 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
@@ -553,7 +606,7 @@ Google Chrome may intercept top-level keys. Be sure you are running with the pro
 [⬆️ Back to top](#top)  
 [🔗 Back to TOC](#toc)
 
-- **Works Out of the Box**: The front-facing webcam (labeled something like *720p HD Camera*) typically works fine without the `detect-webcam.sh` script. However, you might see multiple `/dev/videoX` devices in some apps, and only one of them is the real camera feed.
+- **Works Out of the Box**: The front-facing webcam (labeled something like *720p HD Camera*) typically works fine without the `detect-webcam.sh` script. However, you might see *several* `/dev/videoX` devices in some apps, and only one of them is the real camera feed.
 
 - **Symlink Behavior**:  
   If you do enable `detect-webcam.sh`, you can then run:
@@ -561,7 +614,7 @@ Google Chrome may intercept top-level keys. Be sure you are running with the pro
       guvcview -d /dev/webcam
   
   to confirm it opens your live camera feed.  
-  - **Cheese & ffplay** often don’t accept an explicit `/dev/webcam` argument, but they still pick up the camera automatically.
+  - **Cheese & ffplay** didn't accept an explicit `/dev/webcam` argument for me, but they still detected the camera automatically so that it could be manually selected from a list.
 
 - **Tablet-Facing Camera**:  
   Currently not detected at all in Linux. I haven’t explored possible fixes, so I can’t speculate on how to get it running.
@@ -594,15 +647,20 @@ I can't remember specifically what worked and didn't, but most distros besides X
 [🔗 Back to TOC](#toc)
 
 - **Overall Performance**: Excellent. The Intel Core m3 processor handles everyday tasks smoothly under Xubuntu (web, media, notetaking app with stylus, etc.).
-	+ The only times I noticed lag where I was briefly concerned was when I was running a heavy apt install with multiple other things open.
+	+ The only times I noticed (mildly) concerning lag was when I was running a heavy apt install with multiple other things open.
 
 - **Battery Life**:  
-  - I don’t have precise measurements yet because I’ve been doing heavy installs and testing.  
+  - I don’t have precise or everyday-use measurements yet because I’ve been doing consistently doing heavy installs and testing.  
   - It might drain a bit faster than ChromeOS did, but still significantly better than my i7 ultrabook in comparable usage.  
-  - Under typical (light) usage, you could still see very good battery life—just not necessarily identical to ChromeOS.
+  - Under typical (light) usage, you could still see very good battery life—just not necessarily identical to how it was ChromeOS at my machine's prime.
 
 - **Miscellaneous**:  
-  - I tried installing OpenBoard to try even more stylus apps, but had trouble getting dependencies to work. Krita and Xournal++ seem to work great though. At least as smooth as the ChromeOS/Android options I used before.
+  - Krita and Xournal++ seem to work great though for stylus drawing and note taking, including pressure-sensitivity and palm-rejection working out of the box. Much more smooth than the Android apps I was using most recently.
+  - I tried OpenBoard, but had trouble getting dependencies to work.
+  - GIMP runs smoothly but stylus stuff like pressure sensitivity did not work out of the box, and I haven't made a strong effort to get it to work. In settings, the stylus did not seem to be detected in Input Devices, so potentially more configuration is needed.
+  - I successfully was able to install browsers Google Chrome, Firefox, Tor Browser, Opera, Vivaldi, Brave, and Falkon, but did not use them beyond confirming that keymappings and gestures worked.
+  - Ghostwrite has been working great for writing this README.
+  - Basic dev tools needed for interacting with github (i.e. gh for authorization, mousepad for text editing, meld for diff viewing) have worked great. I have not attempted heavier development.
 
 <a name="uefi"></a>
 ## 12. UEFI Firmware Installation (Non-Comprehensive Summary)
@@ -610,7 +668,7 @@ I can't remember specifically what worked and didn't, but most distros besides X
 [⬆️ Back to top](#top)  
 [🔗 Back to TOC](#toc)
 
-*This is **not** a full guide. Before proceeding, thoroughly read [MrChromebox’s documentation](https://docs.mrchromebox.tech/docs/getting-started.html). The steps below are only additional notes specific to the Samsung Chromebook Plus v2 (Nautilus).*
+*This is **not** a full guide. Before proceeding with any firmware changes, thoroughly read [MrChromebox’s documentation](https://docs.mrchromebox.tech/docs/getting-started.html). The steps below are only additional notes specific to the Samsung Chromebook Plus v2 (Nautilus), and are not meant as a full guide by any means.*
 
 1. **Tools Needed**  
    - A small screwdriver  
@@ -618,30 +676,31 @@ I can't remember specifically what worked and didn't, but most distros besides X
    - A USB-C flash drive  
    - A USB-C charger that can power the device *without* its battery connected (**Note**: higher-watt chargers are unlikely to work; your safest option is the official Google charger. You could test this out before making irreversible software changes, but doing so could still void warranties potentially.)
 
-2. **Check Device Compatibility**  
+2. **Checking Device Compatibility**  
    - Verify that your Chromebook is the Samsung Chromebook Plus v2 (codename “Nautilus”).  
    - If unsure, open `chrome://version` in Chrome to confirm.  
    - At time of this writing, Nautilus is supported by the MrChromebox tools. You can double check [here](https://docs.mrchromebox.tech/docs/supported-devices.html)
 
 3. **Developer Mode**  
-   - Enabling Developer Mode **will** wipe the device.  
+   - Enabling Developer Mode **will** wipe the device. Be sure to backup important files.  
    - After doing so, you’ll boot into a Developer Mode environment (not the standard ChromeOS desktop).
 
-4. **Hardware Write Protection**  
-   - You must disable write protection at the hardware level by removing the bottom cover and disconnecting the battery.  
+4. **Disabling Hardware Write Protection**  
+   - You disable write protection at the hardware level by removing the bottom cover and disconnecting the battery.  
    - With the battery unplugged, you must power the device via a suitable USB-C charger.  
    - The first minute of [this Youtube video](https://www.youtube.com/watch?v=dKZEH0U9Mto) may be helpful.
 
-5. **Install the Firmware**  
-   - Use a USB-C flash drive for creating a backup of your existing firmware (strongly recommended). The firmware tool walks you through this.  
+5. **Installing the Firmware**  
+   - Have USB-C flash drive handy for creating a backup of your existing firmware (strongly recommended, will likely make fixes easier if things go wrong). The firmware tool walks you through this.  
    - Run the MrChromebox firmware utility script. It will require a reboot to disable firmware write protection, then proceed with installing the UEFI ROM.
+   - Overall the MrChromebox software hand-holds you through the process very well in my opinion.
 
-6. **Alternative: RW_LEGACY**  
-   - If you prefer dual-booting ChromeOS and Linux, you can install RW_LEGACY firmware instead, which *usually* does not require disabling hardware write protection.  
-   - This guide focuses on full UEFI firmware replacement.  
+6. **Alternative: RW_LEGACY + dual-boot**  
+   - If you prefer dual-booting ChromeOS and Linux, you can install RW_LEGACY firmware instead (MrChromebox also provides tools for this), which does not appear require disabling hardware write protection (I think).  
+   - This project assumes on full UEFI firmware replacement, but it might work with dual-booting Xubuntu as well.  
    - I did not attempt this at all, so I have no first-hand experience.
 
-**Important:** If you read this far but have *not* gone through MrChromebox’s documentation in detail, you are *not* prepared to do this responsibly. These steps only provide brief notes for Nautilus devices; the official MrChromebox documentation remains your primary reference.
+**Important:** If you read this far into this section but have *not* gone through MrChromebox’s documentation in detail, you are *not* prepared to do this responsibly. These steps only provide brief additional notes for Nautilus devices (and Nautilus devices only); the official MrChromebox documentation remains your primary reference.
 
 ---
 
