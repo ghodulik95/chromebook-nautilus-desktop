@@ -49,7 +49,7 @@ WINDOW_WIDTH=${WIDTH}
 WINDOW_HEIGHT=${HEIGHT}
 
 # Determine overlay position and background sample location based on direction
-if [ "$DIRECTION" = "right" ]; then
+if [ "$DIRECTION" = "left" ]; then
   ARROW_X=$((WINDOW_X + 10))
   ARROW_Y=$((WINDOW_Y + WINDOW_HEIGHT / 2 - 50))
   SAMPLE_X=$((ARROW_X + 50))  # sample to the right of the window's left edge
@@ -59,7 +59,7 @@ elif [ "$DIRECTION" = "refresh" ]; then
   ARROW_Y=$((WINDOW_Y + WINDOW_HEIGHT / 10 + 20))
   SAMPLE_X=$((ARROW_X))
   SAMPLE_Y=$((ARROW_Y + 50))  # sample below the window's top edge
-else  # left
+else  # right
   ARROW_X=$((WINDOW_X + WINDOW_WIDTH - 60))
   ARROW_Y=$((WINDOW_Y + WINDOW_HEIGHT / 2 - 50))
   SAMPLE_X=$((ARROW_X + 50))  # sample to the left of the window's right edge
