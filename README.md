@@ -64,7 +64,9 @@ While Linux can run very well on the Samsung Chromebook Plus v2 Nautilus, there 
 4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
 5. **Lid closing freezes your session and requires a reboot or restart of lightdm**
      - This does not appear to be easily fixable, but you can work around it by remembering to suspend or shutdown before closing your lid. Consider a key `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
-     - If this happens, you can hold down the power button to shutdown, or more safely Ctrl+Alt+top-row-key to enter a TTY shell, and shutdown/reboot from terminal there, or restart lightdm with `sudo systemctl restart lightdm`. This will force close all your windows, but might save other things.
+     - If this happens, the recommended action is to go to another TTY session with Ctrl+Alt+top-row-1-thru-7 (you can use any of the keys from the left arrow to the brightness up, suspected 7-brightness up is the default display tty but I have not confirmed), then do a `sudo reboot` or `sudo shutdown`. This will allow your processes to terminate safely if they can.
+       - Or, you can hard reboot by holding the power button, but this is less safe.
+     - See [troubleshooting](#troubleshooting) if you want some alternatives that *might* have a better chance of saving processes/states, if it is a dire situation.
 
 If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
 
@@ -80,13 +82,13 @@ If you rely on internal audio or a built-in mic, this may be a dealbreaker.
 
 
 <details>
-	<summary>More details on the lid closing issue:</summary>
+	<summary>More details on what is causing the lid closing issue and attempted fixes:</summary>
 
 You'll notice that closing your screen and opening it will make your session unresponsive.
 
 After a moderately thorough investigation, the issue appears to be something strange about the **lid closing**, not necessarily about suspend/wakeup or lid opening. If you close your lid by accident, you may be able to avoid the issue if you reopen your lid within around 0-4s.
 
-I've decided to ignore this problem, for now and the foreseeable future. Instead, when you want to close your lid, just make sure to suspend or power off manually first, or else be faced with having to do a hard manual reboot (if you open before your battery drains). Consider making a `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
+I've decided to mostly ignore this problem (though I have added some possible recovery options in [troubleshooting](#troubleshooting), for now and the foreseeable future. Instead, when you want to close your lid, just make sure to suspend or power off manually first. Consider making a `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
 
 #### Attempted fixes
 
@@ -109,10 +111,7 @@ I’ve tried several approaches to stop my Nautilus from becoming unresponsive a
 
 Despite this, the issue persists. This may mean the lid switch through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
 
-Interestingly, the fact that a TTY session can still be started with Ctrl+Alt+top-row-key indicates that this is solely/primarily a display issue. Running `sudo systemctl restart lightdm` does seem to restart fine without a reboot. I have not investigated this further to see if other processes are broken by this issue. I'd suggest rebooting generally, as forcibly restarting lightdm could cause some problems even if the lid closing issue doesn't extend to non-display things. But if you had a non-UI process that you really don't want to force stop, this is an option that might work. At some point in the future I might investigate a way.
-
-While `sudo reboot` should allow non-frozen process to do some auto-recovery proceses if they support that, you could also try to save your session.
-
+Because it seems to be solely/primarily a display issue, you can go into another TTY terminal session with Ctrl+Alt+F1-6 (or, rather, left button to brightness down button). Your default session used by Xorg should be tty7, with Ctrl+Alt+BrightnessUp. From tty1-6, I recommend just doing `sudo reboot`. This will allow your applications an opportunity to recieve a SIGTERM and close gracefully. Some instructions on further recovery possibilities are in [troubleshooting](#troubleshooting).
 </details>
 
 ---
@@ -633,7 +632,19 @@ For all but touchegg, you should be able to just use the default Xubuntu package
 - Confirm the touchegg daemon is running with `systemctl status touchegg`
 - Run `touchegg --verbose` to confirm that a touchegg process is able to attach to the daemon, and see if gestures are detected in stdout.
 
-### 8.10 Notable Debugging Tools/Commands
+### 8.10 My mouse is moving but everything is unresponsive
+This will happen if you close your lid before suspending or shutting down. The recommended action is to open another tty session using Ctrl+Alt+top-row-key (from top-row left arrow to Brightness Up - I think Brightness Up (tty7) is usually the graphical one but have not confirmed), then logging in with your credentials, and calling `sudo reboot`. Programs that were in a recoverable state should be able to terminate gracefully this way.
+
+If you *really* want to do more to save some work, you can:
+
+1. For a headless application, you should be able to access it normally on the new tty session.
+2. If you are OK with all your windows closing (i.e. non-UI background processes doing jobs that can handle UI restarts), `sudo systemctl restart lightdm` will very possible do the trick, starting a new lightdm, possibly in a different tty than the original.
+   - You should probably restart at your earliest opportunity. The lid closing and the restart of lightdm could both cause issues down the line.
+3. If you were running UI applications that have Xfce session state saving logic, you may be able to trigger saving those states. However, most applications probably don't support this, those that can might not in your specific Xubuntu build, and those that do most likely limit it to non-essential information like window positioning. But if you happen to KNOW your super-important application supports this (e.g. you regularly save your session on logout already), I have included a recovery script that walks you through doing this. It is in the repo under `project-root/.nautilus-unresponsive-screen-recovery/save_logout_restart.sh`. You can make it executable and run it, or alternatively read it and execute the commands in your terminal. It's a pretty simple process.
+   - Note that your new lightdm process might not be opening in the same tty, which is probably fine but could cause weirdness. You could do a little more work to ensure you start in the correct tty.
+   - You should reboot as soon as you can. This process is only meant for an extreme case of trying to save something very important, and, frankly, it is very unlikely to work any better than just rebooting.
+
+### 8.11 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
