@@ -62,8 +62,9 @@ While Linux can run very well on the Samsung Chromebook Plus v2 Nautilus, there 
 2. **Microphone does not work**  
 3. **Aux headphone jack does not work**  
 4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
-5. **Lid closing freezes your session and requires a hard reboot**
+5. **Lid closing freezes your session and requires a reboot or restart of lightdm**
      - This does not appear to be easily fixable, but you can work around it by remembering to suspend or shutdown before closing your lid. Consider a key `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
+     - If this happens, you can hold down the power button to shutdown, or more safely Ctrl+Alt+top-row-key to enter a TTY shell, and shutdown/reboot from terminal there, or restart lightdm with `sudo systemctl restart lightdm`. This will force close all your windows, but might save other things.
 
 If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
 
@@ -107,6 +108,11 @@ I’ve tried several approaches to stop my Nautilus from becoming unresponsive a
   - `ls -l /sys/class/input/event0/device/` confirms there is no `enabled` attribute exposed.
 
 Despite this, the issue persists. This may mean the lid switch through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
+
+Interestingly, the fact that a TTY session can still be started with Ctrl+Alt+top-row-key indicates that this is solely/primarily a display issue. Running `sudo systemctl restart lightdm` does seem to restart fine without a reboot. I have not investigated this further to see if other processes are broken by this issue. I'd suggest rebooting generally, as forcibly restarting lightdm could cause some problems even if the lid closing issue doesn't extend to non-display things. But if you had a non-UI process that you really don't want to force stop, this is an option that might work. At some point in the future I might investigate a way.
+
+While `sudo reboot` should allow non-frozen process to do some auto-recovery proceses if they support that, you could also try to save your session.
+
 </details>
 
 ---
