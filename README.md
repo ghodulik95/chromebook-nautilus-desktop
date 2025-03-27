@@ -93,7 +93,7 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
 
 3. **Swipe Navigation**  
    - Implements 3-finger swipes for browser back/forward (mimicking ChromeOS-style gestures), including cute hacky custom animations. 
-   - Confirmed to work with Google Chrome, Firefox, Tor Browser, Opera, Vivaldi,Brave, and Falkon (minor configuration needed to add support for gesture nav on other browsers)
+   - Confirmed to work with Google Chrome, Firefox, Tor Browser, Opera, Vivaldi, Brave, and Falkon (minor configuration to `touchegg.conf` needed to add support for gesture nav on other browsers)
    - 2-finger gestures not supported.
 
 4. **Bluetooth Headphone/Headset Toggle**  
@@ -223,7 +223,16 @@ Paste:
 
 Save and reboot/logout and back in. *I have not looked into momentum scrolling so I cannot say how easy or difficult that is to enable or implement. I might look into it in the future.*
 
-### 6.3. Add google-chrome ppa repository
+### 6.3. Add necessary repositories
+
+#### (Required) Add Touchégg repository
+**Xubuntu** includes an old version of Touchégg by default. For full functionality, you must add the updated [repository as per documentation](https://github.com/JoseExposito/touchegg#ubuntu-debian-and-derivatives). At time of this writing, that documentation is:
+
+	sudo add-apt-repository ppa:touchegg/stable
+	sudo apt update
+
+#### Google Chrome ppa repository
+You can skip if you do not want to use Google Chrome.
 
     wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
 
@@ -260,6 +269,8 @@ In the project root directory:
   + For certain keymapping commands
 - `libinput-tools`
   + For detecting tablet-mode event emitting hardware
+- `imagemagick`, `yad`, `x11-utils`
+  + For color/image processing and window animation in swipe gesture browser animations in ~/bin/gesture-flash.sh
 - `google-chrome-stable` (from official Google repository, added in prior steps)  
 - Touché (the `touchegg` package from PPA or Ubuntu repo)  
   + For multi-touch gesture commands
@@ -270,11 +281,11 @@ In the project root directory:
 
 With version specifications:
     
-    sudo apt install -y brightnessctl=0.5.1-3.1 grep=3.11-4build1 xbindkeys=1.8.7-2 xdotool=1:3.20160805.1-5build1 libinput-tools google-chrome-stable touchegg
+    sudo apt install -y brightnessctl=0.5.1-3.1 grep=3.11-4build1 xbindkeys=1.8.7-2 xdotool=1:3.20160805.1-5build1 libinput-tools imagemagick yad x11-utils google-chrome-stable touchegg
 
 Without version specifications:
     
-    sudo apt install -y brightnessctl grep xbindkeys xdotool libinput-tools google-chrome-stable touchegg
+    sudo apt install -y brightnessctl grep xbindkeys xdotool libinput-tools imagemagick yad x11-utils google-chrome-stable imagemagic touchegg
 
 #### If using the detect-webcam script
 you will also need to install v4l-utils. This can be done with the below command or by uncommenting the package in packages.txt before installing via packages.txt.
@@ -283,7 +294,7 @@ you will also need to install v4l-utils. This can be done with the below command
 
 ### 6.6. Modifying the Google Chrome Launcher
 
-To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Refresh, Fullscreen), you’ll need to modify its `.desktop` launcher:
+To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Refresh, Fullscreen), you’ll need to modify its `.desktop` launcher. (When I tested, Vivaldi and Brave worked without customization, but it is possible some Chromium and Chromium-based browsers could need this.)
 
 1. **Copy the system launcher to your local applications directory**:
 
@@ -322,9 +333,7 @@ To prevent Chrome from intercepting the Chromebook top-row keys (e.g., Back, Ref
 
 *Note that there are several Exec= lines for different launching options, and it is recommended to add the flag to each so that your top-row keys work as expected at all times.*
 
-**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys and will not interpret them appropriately. It's likely that Chromium also needs this flag if you prefer Chromium; you can similarly create a custom .desktop by copying it from /usr/share/applications/ to ~/.local/share/applications/ and adding the disable-features tag to each Exec line (I have not tested this with Chromium, YMMV). 
-
-**Other browsers should not need this customization**: I think it is specific to Chrome browsers detecting Chromebook hardware strangely.
+**Important**: If you launch Chrome without this parameter, many of the top-row key mappings will break, because Chrome intercepts those keys and will not interpret them appropriately. It's possible that Chromium and other Chromium-based browsers would need this flag. However, Vivaldi and Brave seemed to work fine.
 
 ### 6.7. Copy Project Files to Your Home Directory
 
@@ -523,8 +532,11 @@ Below are some issues you could run into.
 
 - **Ensure XModMap Autostart**  
   Verify `XModMap.desktop` is enabled in **Session and Startup**.
+  
+### 8.7 Back button key, Forward button key, Refresh key, other top-level keys not working on Chrome
+Google Chrome may intercept top-level keys. Be sure you are running with the proper flags. See [Installation instructions](#installation) for how to make sure to launch Chrome with these flags by default. Possibly updating Chrome could require you to redo this step.
 
-### 8.7 Notable Debugging Tools/Commands
+### 8.8 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
