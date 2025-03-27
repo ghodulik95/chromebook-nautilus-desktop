@@ -580,7 +580,7 @@ The features have package dependenceis as follows:
 | Functionality                     | Package Dependencies                                           |
 |----------------------------------|----------------------------------------------------------------|
 | Keymappings                      | xbindkeys, xdotool, xmodmap, brightnessctl, xfce4-screenshooter |
-| Table mode                       | libinput-tools                                                 |
+| Tablet mode                       | libinput-tools                                                 |
 | Gesture navigation with animations | touchegg, yad, x11-utils, imagemagick, xdotool                |
 | Detect and symlink camera        | v4l-utils                                                      |
 
