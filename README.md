@@ -62,6 +62,8 @@ While Linux can run very well on the Samsung Chromebook Plus v2 Nautilus, there 
 2. **Microphone does not work**  
 3. **Aux headphone jack does not work**  
 4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
+5. **Lid closing freezes your session and requires a hard reboot**
+     - This does not appear to be easily fixable, but you can work around it by remembering to suspend or shutdown before closing your lid. Consider a key `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
 
 If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
 
@@ -72,37 +74,41 @@ If you rely on internal audio or a built-in mic, this may be a dealbreaker.
 <details>
   <summary>Could the audio issues be fixable?</summary>
 
-  [WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or headphone jack, feel free to explore that audio script solution—but proceed with caution. Xubuntu is not officially supported by the audio script but Ubuntu 24.10 is, so that might be good enough ?
+[WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or headphone jack, feel free to explore that audio script solution—but proceed with caution. Xubuntu is not officially supported by the audio script but Ubuntu 24.10 is, so that might be good enough ?
 </details>
 
-#### Lid close freezes your session
+
+<details>
+	<summary>More details on the lid closing issue:</summary>
+
 You'll notice that closing your screen and opening it will make your session unresponsive.
 
-After a moderately thorough investigation, the issue appears to be something strange about the **lid closing**, not necessarily about suspend/wakeup or lid opening. However, if you close your lid and open it quickly enough, sometimes this issue does not trigger.
+After a moderately thorough investigation, the issue appears to be something strange about the **lid closing**, not necessarily about suspend/wakeup or lid opening. If you close your lid by accident, you may be able to avoid the issue if you reopen your lid within around 0-4s.
 
-So, I've decided to ignore this problem. Instead, when you want to close your lid, just make sure to suspend or power off manually first, or else be faced with having to do a hard manual reboot (if you open before your battery drains).
-<details>
-	<summary>This is what I have tried so far, and what my main theory of the issue is.</summary>
+I've decided to ignore this problem, for now and the foreseeable future. Instead, when you want to close your lid, just make sure to suspend or power off manually first, or else be faced with having to do a hard manual reboot (if you open before your battery drains). Consider making a `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
 
-	I’ve tried several approaches to stop my Samsung Chromebook Plus V2 (running Xubuntu) from becoming unresponsive after closing and reopening the lid. Here's what I tested:
-	
-	- **Edited `/etc/default/grub`** to disable Intel display power-saving features:  
-	  - `i915.enable_psr=0`  
-	  - `i915.enable_dc=0`  
-	- **Used the Xfce Power Manager GUI** to set lid close actions to "Lock Screen" or "Switch off display"
- 	  - **'Do nothing' was not a listed option here**, and perhaps these issues are why that option was not provided.
-	- **Edited `/etc/systemd/logind.conf`** to ignore lid events:
-	  - `HandleLidSwitch=ignore`
-	  - `HandleLidSwitchDocked=ignore`
-	  - `HandleLidSwitchExternalPower=ignore`
-	- **Disabled lid wake via `/proc/acpi/wakeup`** by toggling `LID0` to `disabled`
- 	  - Note that I've concluded that the wakeup behavior is not the problem, so you can leave this enabled.
-	- **Created a udev rule in `/etc/udev/rules.d/`** to block `"Lid Switch"` input events at the device layer  
-	  (confirmed via presence of `/sys/class/input/event0/device/name:Lid Switch`)
-   	  - `ls -l /sys/class/input/event0/device/` confirms there is no `enabled` attribute exposed.
-	
-	Despite this, the issue persists. This may mean the lid switch through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
+#### Attempted fixes
+
+I’ve tried several approaches to stop my Nautilus from becoming unresponsive after closing and reopening the lid. Here's what I tested:
+
+- **Edited `/etc/default/grub`** to disable Intel display power-saving features:  
+  - `i915.enable_psr=0`  
+  - `i915.enable_dc=0`  
+- **Used the Xfce Power Manager GUI** to set lid close actions to "Lock Screen" or "Switch off display"
+  - **'Do nothing' was not a listed option here**, and perhaps these issues are why that option was not provided.
+- **Edited `/etc/systemd/logind.conf`** to ignore lid events:
+  - `HandleLidSwitch=ignore`
+  - `HandleLidSwitchDocked=ignore`
+  - `HandleLidSwitchExternalPower=ignore`
+- **Disabled lid wake via `/proc/acpi/wakeup`** by toggling `LID0` to `disabled`
+  - Note that I've concluded that the wakeup behavior is not the problem, so you can leave this enabled.
+- **Created a udev rule in `/etc/udev/rules.d/`** to block `"Lid Switch"` input events at the device layer  
+  (confirmed via presence of `/sys/class/input/event0/device/name:Lid Switch`)
+  - `ls -l /sys/class/input/event0/device/` confirms there is no `enabled` attribute exposed.
+
+Despite this, the issue persists. This may mean the lid switch through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
 </details>
+
 ---
 
 <a name="features"></a>
