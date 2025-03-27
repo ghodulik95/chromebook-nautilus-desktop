@@ -1,0 +1,35 @@
+! Chromebook Nautilus Desktop Top Row Remapping
+! Below are specific mappings for the Chromebook Nautilus from:
+! https://github.com/ghodulik95/chromebook-nautilus-desktop
+! This project is not affiliated with or endorsed by Google or Samsung.
+!
+! The following mappings are for the top-row keys on the
+! Samsung Chromebook Plus v2 (Nautilus), which are not actually labeled
+! as F# keys on the keyboard.
+!
+! Note that top-row keys omitted here are instead mapped with xbindkeys,
+! as their functionality was more complex, and/or there was some funkiness with
+! Nautilus mappings that made xbindkeys a better fit for some cases
+! and xmodmap a better fit for other. (Though I might be misremembering.)
+!
+! While I generally recommend using tools like `xev | grep keycode` and `xbindkeys -k`
+! to identify keycodes and modifiers, I vaguely recall that `showkey` was useful
+! in a few edge cases — though I may be mistaken about that as well.
+!
+! As noted in documentation, Google Chrome (and likely Chromium) may intercept
+! these key events unless launched with the flag:
+!     --disable-features=KeyboardShortcutViewer
+
+keycode 67 = XF86Back
+keycode 68 = XF86Forward
+keycode 74 = XF86AudioMute
+keycode 75 = XF86AudioLowerVolume
+keycode 76 = XF86AudioRaiseVolume
+
+! Lock button
+! Default keymapping is XF86Tools, which doesn't appear to
+! really do anything by default in Xubuntu, though it may
+! for GNOME and KDE.
+! To acheive actual lock screen functionality,
+! replace with XF86ScreenSaver or XF86Sleep
+keycode 191 = Delete

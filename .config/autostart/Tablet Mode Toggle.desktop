@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.9.4
+Type=Application
+Name=Tablet Mode Toggle
+Comment=Disable keyboard in tablet mode and re-enable on tablet mode exit
+Exec=sudo bin/tablet-mode-handler.sh
+OnlyShowIn=XFCE;
+RunHook=0
+StartupNotify=false
+Terminal=false
+Hidden=false
+

@@ -1,0 +1,200 @@
+# For the benefit of emacs users: -*- shell-script -*-
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 1.8.7
+#
+# If you edit this file, do not forget to uncomment any lines
+# that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# To specify a key, you can use 'xbindkeys --key' or
+# 'xbindkeys --multikey' and put one of the two lines in this file.
+#
+# The format of a command line is:
+#    "command to start"
+#       associated key
+#
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h
+# The XK_ is not needed.
+#
+# List of modifier:
+#   Release, Control, Shift, Mod1 (Alt), Mod2 (NumLock),
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll).
+#
+
+# The release modifier is not a standard X modifier, but you can
+# use it if you want to catch release events instead of press events
+
+# By defaults, xbindkeys does not pay attention with the modifiers
+# NumLock, CapsLock and ScrollLock.
+# Uncomment the lines above if you want to pay attention to them.
+
+#keystate_numlock = enable
+#keystate_capslock = enable
+#keystate_scrolllock= enable
+
+# Examples of commands:
+
+"xbindkeys_show" 
+  control+shift + q
+
+# set directly keycode (here control + f with my keyboard)
+#"xterm"
+#  c:41 + m:0x4
+
+# specify a mouse button
+#"xterm"
+#  control + b:2
+
+#"xterm -geom 50x20+20+20"
+#   Shift+Mod2+alt + s
+#
+## set directly keycode (here control+alt+mod2 + f with my keyboard)
+#"xterm"
+#  alt + c:0x29 + m:4 + mod2
+#
+## Control+Shift+a  release event starts rxvt
+#"rxvt"
+#  release+control+shift + a
+#
+## Control + mouse button 2 release event starts rxvt
+#"rxvt"
+#  Control + b:2 + Release
+
+## ==============================
+## Chromebook Nautilus Desktop
+## ==============================
+
+## Above this text is the unmodified default xbindkeys configuration.
+## Below are custom key mappings for the Chromebook Nautilus, sourced from:
+## https://github.com/ghodulik95/chromebook-nautilus-desktop
+## This project is not affiliated with or endorsed by Google or Samsung.
+
+## The following mappings are for the top F# key row on the
+## Samsung Chromebook Plus v2 (Nautilus), which are not actually marked as
+## F# keys on the keyboard.
+## Note: Some top-row keys are instead mapped using XModMap, as those
+## mappings were simpler to implement without xbindkeys. And I vaguely
+## recall that there were some cases of Nautilus funkiness in the keycodes that
+## made XModMap more appropriate, but I cannot recall specifics.
+## As noted in the documentation, Google Chrome (and likely Chromium) may
+## intercept these key events unless launched with the flag:
+##   --disable-features=KeyboardShortcutViewer
+
+## Most keys had clear Xubuntu equivalents.
+## The “Window Selection” button (next to the Fullscreen key), however,
+## is mapped to take a screenshot to the clipboard instead.
+
+## ==============================
+## Tips
+## ==============================
+
+## --- Command Syntax Notes ---
+
+## - Quotes inside a `sh -c` command can be finicky. It's often safer to escape spaces
+##   (e.g., use `Screenshot\ captured`) rather than relying on nested or internal quotes.
+##     It is relatively easy to add cute notifications with notify-send if you keep this in mind.
+##     The -t parameter specifies duration of notification and -i let's you specify an icon.
+
+## - Some commands may require a short delay (e.g., `sleep 0.1`) to ensure they are
+##   received by the correct window, especially for simulated key presses like `xdotool`.
+
+## --- Detecting Keycodes for xbindkeys ---
+
+## To find the keycode and modifier mask for a key, use one of the following:
+
+## 1. Using `xev`:
+##     Run:
+##         xev | grep keycode
+##
+##     Then press the key of interest. You'll get output like:
+##         state 0x0, keycode 68 (keysym 0x1008ff27, XF86Forward), same_screen YES,
+##
+##     Interpretation:
+##       - `state 0x0` → `m:0x0` (modifier mask)
+##       - `keycode 68` → `c:68` (keycode)
+##
+##     Example xbindkeys format:
+##         m:0x0 + c:68
+
+## 2. Using `xbindkeys -k` (easier for combos):
+##     Run:
+##         xbindkeys -k
+##
+##     A terminal window will appear prompting you to press a key (or key combination).
+##     After pressing it, you'll see output like:
+##
+##         "NoCommand"
+##             m:0x4 + c:67
+##             control + XF86Back
+##
+##     - Copy the `m:` and `c:` line into your `.xbindkeysrc` to use with your command.
+##     - This method is especially useful for combinations like Ctrl, Alt, or Super
+##       that are harder to track manually via `xev`.
+
+## --- Note on Unsuitable Tools ---
+
+## Tools like `showkey` and `libinput debug-events` do not provide keycodes in the
+## format/at the level needed by xbindkeys:
+##
+##     - `showkey` is intended for TTYs and outputs raw kernel scancodes.
+##     - `libinput debug-events` provides low-level device event codes unrelated
+##       to X11 keycodes or modifier states.
+##
+## Stick to `xev` or `xbindkeys -k` for best results with xbindkeys.
+
+## ==============================
+## Keybindings
+## ==============================
+
+# Brightness down
+"sh -c 'sudo -n brightnessctl set 10%- && notify-send -t 1000 -i display-brightness Brightness\ down'"
+    m:0x0 + c:72
+
+# Brightness up
+"sh -c 'sudo -n brightnessctl set +10% && notify-send -t 1000 -i display-brightness Brightness\ up'"
+    m:0x0 + c:73
+
+# Refresh page (with slight delay to ensure focus is correct)
+"xdotool sleep 0.1 key ctrl+r"
+    m:0x0 + c:69
+
+# Toggle fullscreen (with slight delay to ensure focus is correct)
+"xdotool sleep 0.1 key F11"
+    m:0x0 + c:70
+
+# Screenshot options for the “Window Manager” (F5) button.
+# Only one of the following should be uncommented at a time.
+
+# Screenshot full screen to clipboard (no notification)
+#"xfce4-screenshooter --fullscreen -c"
+#    m:0x0 + c:71
+
+# Screenshot full screen to clipboard with notification
+# Uses environment variables correctly; internal quotes can be finicky,
+# so backslash-escaped spaces are used instead.
+"sh -c 'xfce4-screenshooter --fullscreen -c && notify-send -t 1500 -i camera-photo Screenshot\ captured Saved\ to\ clipboard'"
+    m:0x0 + c:71
+
+# (Does not work) Ctrl + F5 --> Open specific Chrome tabs
+# This mapping may conflict with existing system shortcuts or something.
+# Note: Ctrl + Alt + F5 opens a TTY console.
+#"google-chrome-stable https://mail.google.com https://calendar.google.com https://news.ycombinator.com"
+#    m:0x4 + c:71
+
+## The following mappings are not specific to the Samsung Chromebook v2 Nautilus.
+## They are personal preferences and are commented out by default.
+
+# Ctrl + Alt + V --> Open Clipman history
+# Requires Clipman to be enabled on autostart.
+#"xfce4-clipman-history"
+#    Control+Alt + v
+
+
+##################################
+# End of xbindkeys configuration #
+##################################
