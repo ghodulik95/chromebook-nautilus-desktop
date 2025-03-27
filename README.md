@@ -494,13 +494,13 @@ Below are some issues you could run into.
 
 		pgrep -laf xbindkeys  
   
-  If there’s no output, try `xbindkeys` manually or create a `.desktop` file in `~/.config/autostart/` or via GUI to start it.
+  If there’s no output, try `xbindkeys` manually or create a `.desktop` file in `~/.config/autostart/` or via GUI to start on startup.
 
 - **Test Manual Brightness**  
 
     	brightnessctl s 50  
     	
-  If you can set brightness manually, your bindings or permissions may be misconfigured. (Probably requires sudo)
+  If you can set brightness manually, your bindings or permissions may be misconfigured. *(The abpve command probably requires sudo.)*
 
 ### 8.2 Tablet Mode Doesn’t Disable the Keyboard
 
@@ -520,13 +520,14 @@ Below are some issues you could run into.
 
 ### 8.4 Multi-Finger Gestures Not Working
 
-- **Confirm Touché Daemon is running**  
-There should be a system service daemon running:
+- **Confirm Touché daemon is running**  
+	There should be a system service daemon running:
 
 		systemctl status touchegg
-A debug process can be started with
 
-	touchegg --debug  
+	A debug process can be started with
+
+		touchegg --debug  
 		
 Check stdout to see if gestures are detected. If not, verify that `~/.config/touchegg/touchegg.conf` is loaded and autostart rule is present and enabled.
 
@@ -546,33 +547,36 @@ Check stdout to see if gestures are detected. If not, verify that `~/.config/tou
 			/dev/video1
 			/dev/media0
 	
-	The first /dev/video* entry should be the correct one. These can vary across boots.
+	The device ids listed can vary across booths. The first /dev/video* entry should be the correct one.
 
 - **Test with GUVCView or Cheese**  
    	Replacing /dev/video0 with the path from above:
     	
-    	guvcview -d /dev/video*
+    	guvcview -d /dev/video0
     
   or open `cheese` or `ffplay` and manually select the 720p HD Camera, which should be the webcam. Specifying a device id in terminal with `cheese` and `ffplay` does not work in my experience. (There may be multiple entries with this device naming. Be sure to check each of them. Only one is expected to work.)
 
 - **Symlink**  
-  If you are using an application that requires a consistent device id, enable `webcam-link.desktop` to consistently link the device id to `/dev/webcam` on startup.
+  If you are using an application that requires a consistent device id, enable `webcam-link.desktop` autostart rule to consistently link the device id to `/dev/webcam` on startup.
 
 ### 8.6 Key Mappings Revert After Reboot
 
 - **Ensure XModMap autostart**  
-  Verify `XModMap.desktop` is enabled in **Session and Startup**.
--- **Ensure xbindkeys autostart**  
-  Verify that an autostart entry for **xbindkeys** is enabled in **Session and Startup**.  
-  On my system, `xbindkeys` created this automatically during installation. If that didn’t happen for you, you’ll need to manually add one that calls `xbindkeys_autostart` (which should handle stuff config updates and other process handling stuff, making it less likely to need to restart if there's some crash). 
+  - Verify `XModMap.desktop` is enabled in **Session and Startup**.
+- **Ensure xbindkeys autostart**  
+  - Verify that an autostart entry for **xbindkeys** is enabled in **Session and Startup**.  
+  - On my system, `xbindkeys` created this automatically during installation. If that didn’t happen for you, you’ll need to manually add one that calls `xbindkeys_autostart` (which should handle stuff config updates and other process handling stuff, making it less likely to need to restart if there's some crash). 
   
-### 8.7 Back button key, Forward button key, Refresh key, other top-level keys not working on Chrome
-Google Chrome may intercept top-level keys. Be sure you are running with the proper flags. See [Installation instructions](#installation) for how to make sure to launch Chrome with these flags by default. Possibly updating Chrome could require you to redo this step.
+### 8.7 Back button key, Forward button key, Refresh key, other top-row keys not working
+* If this is only happening when running Chrome:
+  - Google Chrome may intercept top-row keys. Be sure you are running with the proper flags. See [Installation instructions](#installation) for how to have Chrome launch with these flags by default. Updating Chrome could require you to redo this step.
+* If this is happening all the time:
+	- There might be an issue with your `Xmodmap` or `xbindkeys` configuration. Refer to other sections.
 
 ### 8.8 XYZ is having package issues
-Make sure necessary packages are installed. Consider running `sudo apt update` and/or `sudo apt upgrade`
+Make sure necessary packages are installed. Consider running `sudo apt update` and/or `sudo apt upgrade`.
 
-The functionalities have package dependenceis as follows:
+The features have package dependenceis as follows:
 | Functionality                     | Package Dependencies                                           |
 |----------------------------------|----------------------------------------------------------------|
 | Keymappings                      | xbindkeys, xdotool, xmodmap, brightnessctl, xfce4-screenshooter |
@@ -580,14 +584,14 @@ The functionalities have package dependenceis as follows:
 | Gesture navigation with animations | touchegg, yad, x11-utils, imagemagick, xdotool                |
 | Detect and symlink camera        | v4l-utils                                                      |
 
-For all but touchegg, you should be able to just use the default Xubuntu packages and install with `sudo apt install`.
+For all but touchegg, you should be able to just use the default Xubuntu packages and install with `sudo apt install`. Some versions of `xbindkeys` might not create/enable an autostart rule on install, which would mean you need to add one that calls `xbindkeys_autostart`.
 
 ### 8.9 Gesture navigation issues
-- Make sure you have added the touchegg repository and installed properly. The default package provided by Xubuntu will not have work with all features of this project. See [installation](#installation) for more guidance.
-- Make sure ~/.config/touchegg/touchegg.conf is present and contains the gestures
+- Make sure you have added the touchegg repository and installed properly. The default package provided by Xubuntu will not work with all features of this project. See [installation](#installation) for more guidance.
+- Make sure ~/.config/touchegg/touchegg.conf is present and contains the gestures, making sure it is not just the default config.
 - Make sure touchegg dependencies are installed and up to date
 - Confirm the touchegg daemon is running with `systemctl status touchegg`
-- Run `touchegg --verbose` to confirm that a touchegg process is able to attach to the daemon, and see if gestures are detected.
+- Run `touchegg --verbose` to confirm that a touchegg process is able to attach to the daemon, and see if gestures are detected in stdout.
 
 ### 8.10 Notable Debugging Tools/Commands
 
