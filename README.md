@@ -110,7 +110,7 @@ I’ve tried several approaches to stop my Nautilus from becoming unresponsive a
   (confirmed via presence of `/sys/class/input/event0/device/name:Lid Switch`)
   - `ls -l /sys/class/input/event0/device/` confirms there is no `enabled` attribute exposed.
 
-Despite this, the issue persists. This may mean the lid switch through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
+Despite this, the issue persists. This may mean the lid switch is handled through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
 </details>
 
 ---
@@ -174,7 +174,7 @@ Modifying the Chromebook firmware and installing Linux on this device can void y
 I'll repeat here: internal speakers, headphone jack, microphone, and tablet-facing camera do not work. Workarounds on the speakers are specifically known to potentially cause permanent damage. See [Limitations](#limitations).
 
 ### 4.3. My attempts at addressing the hardware limitations
-While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a very involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the capacity to spend several hours sorting it out (and possibly come up empty). If that sounds like a fun challenge for you, though, then awesome. Please let me know how it goes.
+While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a very involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the capacity to spend several hours sorting it out (and possibly come up empty). If that sounds like a fun challenge for you, though, then awesome. Please let me know how it goes. My investigations to the lid closing problem is described in [limitations](#limitations), and safe recovery options are described [here](#lid-close-recovery)
 
 ---
 
