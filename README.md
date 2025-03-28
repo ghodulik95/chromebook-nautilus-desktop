@@ -62,6 +62,10 @@ While Linux can run very well on the Samsung Chromebook Plus v2 Nautilus, there 
 2. **Microphone does not work**  
 3. **Aux headphone jack does not work**  
 4. **Tablet-facing camera does not work** (though the regular “webcam” camera does)
+5. **Lid closing freezes your session and [requires a reboot or restart of lightdm](#lid-close-recovery)**
+     - Workaround by remembering to suspend or shutdown manually before closing your lid.
+     - Adding a keyboard shortcut for `systemctl suspend` is a pretty good idea.
+     - Recovery options described [here](#lid-close-recovery), for doing a safe reboot, and some more advanced things if needed.
 
 If you rely on internal audio or a built-in mic, this may be a dealbreaker.  
 
@@ -72,7 +76,41 @@ If you rely on internal audio or a built-in mic, this may be a dealbreaker.
 <details>
   <summary>Could the audio issues be fixable?</summary>
 
-  [WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or headphone jack, feel free to explore that audio script solution—but proceed with caution. Xubuntu is not officially supported by the audio script but Ubuntu 24.10 is, so that might be good enough ?
+[WeirdTreeThing’s audio script](https://github.com/WeirdTreeThing/chromebook-linux-audio?tab=readme-ov-file) can fix audio on some Chromebooks. However, there’s a risk of permanently damaging the speakers at high volumes on this model. I tried it once on NixOS with no success and decided not to pursue further. If you need internal mic or headphone jack, feel free to explore that audio script solution—but proceed with caution. Xubuntu is not officially supported by the audio script but Ubuntu 24.10 is, so that might be good enough ?
+</details>
+
+
+<details>
+	<summary>More details on what is causing the lid closing issue and attempted fixes:</summary>
+
+You'll notice that closing your screen and opening it will make your session unresponsive.
+
+After a moderately thorough investigation, the issue appears to be something strange about the **lid closing**, not necessarily about suspend/wakeup or lid opening. If you close your lid by accident, you may be able to avoid the issue if you reopen your lid within around 0-4s.
+
+It also seems to be solely (or at least primarily) a display process issue. For instance, you can still move to a different tty. See [here](#lid-close-recovery) for safe shutdown instructions and some more advanced recovery options.
+
+I've decided to mostly ignore this problem, opting that remembering to manually suspend or shutdown before lid closing is an acceptable workaround. Consider making a `Keyboard` > `Application Shourtcut` for the `systemctl suspend` command.
+
+#### Attempted fixes
+
+I’ve tried several approaches to stop my Nautilus from becoming unresponsive after closing and reopening the lid. Here's what I tested:
+
+- **Edited `/etc/default/grub`** to disable Intel display power-saving features:  
+  - `i915.enable_psr=0`  
+  - `i915.enable_dc=0`  
+- **Used the Xfce Power Manager GUI** to set lid close actions to "Lock Screen" or "Switch off display"
+  - **'Do nothing' was not a listed option here**, and perhaps these issues are why that option was not provided.
+- **Edited `/etc/systemd/logind.conf`** to ignore lid events:
+  - `HandleLidSwitch=ignore`
+  - `HandleLidSwitchDocked=ignore`
+  - `HandleLidSwitchExternalPower=ignore`
+- **Disabled lid wake via `/proc/acpi/wakeup`** by toggling `LID0` to `disabled`
+  - Note that I've concluded that the wakeup behavior is not the problem, so you can leave this enabled.
+- **Created a udev rule in `/etc/udev/rules.d/`** to block `"Lid Switch"` input events at the device layer  
+  (confirmed via presence of `/sys/class/input/event0/device/name:Lid Switch`)
+  - `ls -l /sys/class/input/event0/device/` confirms there is no `enabled` attribute exposed.
+
+Despite this, the issue persists. This may mean the lid switch is handled through non-standard firmware or ACPI behavior, bypassing typical Linux input and power management layers.
 </details>
 
 ---
@@ -136,7 +174,7 @@ Modifying the Chromebook firmware and installing Linux on this device can void y
 I'll repeat here: internal speakers, headphone jack, microphone, and tablet-facing camera do not work. Workarounds on the speakers are specifically known to potentially cause permanent damage. See [Limitations](#limitations).
 
 ### 4.3. My attempts at addressing the hardware limitations
-While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a very involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the capacity to spend several hours sorting it out (and possibly come up empty). If that sounds like a fun challenge for you, though, then awesome. Please let me know how it goes.
+While I put in *some* effort to get the speakers, headphone jack, and microphone to work, I put in zero effort at getting the tablet camera to work. You might have more luck than me, finding an easy workaround. I suspect that many of these limitations will be a very involved process to work around, however, so I would not recommend proceeding if any of that hardware is essential to you and you don't have the capacity to spend several hours sorting it out (and possibly come up empty). If that sounds like a fun challenge for you, though, then awesome. Please let me know how it goes. My investigations to the lid closing problem is described in [limitations](#limitations), and safe recovery options are described [here](#lid-close-recovery)
 
 ---
 
@@ -593,7 +631,45 @@ For all but touchegg, you should be able to just use the default Xubuntu package
 - Confirm the touchegg daemon is running with `systemctl status touchegg`
 - Run `touchegg --verbose` to confirm that a touchegg process is able to attach to the daemon, and see if gestures are detected in stdout.
 
-### 8.10 Notable Debugging Tools/Commands
+<a name="lid-close-recovery"></a>
+### 8.10 My mouse is moving but everything is unresponsive
+This will happen if you close your lid before suspending or shutting down. The easiest but less safe thing to do is a hard shutdown by holding down the power button. However, it's pretty easy to do a safer shutdown/reboot, which will give your programs an opportunity to close gracefully (if they can), potentially triggering some auto-recovery features like in open documents with unsaved changes:
+
+1. Go to a different tty terminal.
+   - Press `Ctrl+Alt+Refresh Key`
+   - If that does not work, press `Ctrl+Alt+FullScreen Key`.
+   - If neither of those worked, then either 1) your issue is unrelated to the lid closing problem or 2) the lid closing caused more problems than expected.
+     - If (2), I would be curious to know this. Start an issue describing what happened, if you are so inclined.
+2. You should be in a full screen terminal now. Login with your usual credentials.
+3. Call `sudo shutdown` or `sudo reboot`.
+
+#### Advanced recovery for also saving Xfce session
+
+Some users make great use of saving window sessions on logout. If this is not you, and/or if losing your window session state is not a big deal in this particular instance, the instructions in this section are probably not worth doing as opposed to just `sudo shutdown` or `sudo reboot`.
+
+From the new tty terminal you entered in step 2, you could alternatively tell your frozen session to logout before the reboot, which would trigger an Xfce session save if that option is persistently enabled for you. If it is not, you could also set it via terminal and then do the logout.
+
+To log out your session, most likely this command will work:
+
+	DISPLAY=:0 xfce4-session-logout --logout
+
+If that doesn't work, it may be that your frozen sessions display is not `:0`. **This is pretty unusual**, but would be the case if you had multiple display sessions going on your machine (that would have be a pretty intentional thing on your part). You can figure out which display you are logged in on with a command such as `ps aux | grep Xorg | grep -v grep`. Determine which row is the session that crashed (most likely there will be only one row), and the display is indicated with something like `Xorg :<number> vt<other-number>`; your display is `:<number>`. Run the command with `:<number>` instead of `:0`.
+
+To enable session saving before triggering the logout:
+
+	xfconf-query -c xfce4-session -p /general/SaveOnExit -s true
+
+From here, the recommended action is still to shutdown or reboot, but your window session will have been saved. In my experience so far, not many applications actually support Xfce window session saving on this Xubuntu version on Nautilus, so I am assuming that you would only do this if you happen to heavily use this feature already and know from past experience that many of your applications support this feature. 
+
+#### Even more advanced, if you were doing something really important that has headless components/engagement options you want to try to recover/continue from
+
+Given that you are in a terminal session now, you should be able to access headless or headless components of applications you were running before, and engage with them through command-line the same way you would otherwise. If this applies to you, I am going to assume you have the skills to attempt your own recovery from here. Headless applications very possibly did not crash, so you could query their status and work from that.
+
+A simple note, running `sudo systemctl restart lightdm` has worked in restarting the display, if you want to simply have your display back and attempt a GUI-based recovery.
+
+While you could operate as normal from there, I would still recommend rebooting at your earliest convenience; I am not sure what other issues the lid closing could have caused, and restarting lightdm could probably also cause some unexpected behavior.
+
+### 8.11 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
@@ -657,7 +733,9 @@ I can't remember specifically what worked and didn't, but most distros besides X
   - I don’t have precise or everyday-use measurements yet because I’ve been consistently doing heavy installs and testing.  
   - It might drain a bit faster than ChromeOS did, but still significantly better than my i7 ultrabook in comparable usage.  
   - Under typical (light) usage, you could still see very good battery life—just not necessarily identical to how it was ChromeOS at my machine's prime.
-
+- **Sleep-mode battery life**
+  - Based on the extremely limited data of "I left my machine on sleep mode overnight once," the battery went down about 15% being suspended overnight.
+  - Remember that if you want to enter sleep mode, do it **before closing the lid**, as this breaks stuff. Recovery options from this breakage described [here](#lid-close-recovery).
 - **Miscellaneous**:  
   - Krita and Xournal++ seem to work great though for stylus drawing and note taking, including pressure-sensitivity and palm-rejection working out of the box. Much more smooth than the Android apps I was using most recently.
   - I tried OpenBoard, but had trouble getting dependencies to work.
