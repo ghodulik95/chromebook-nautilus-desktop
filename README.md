@@ -632,17 +632,35 @@ For all but touchegg, you should be able to just use the default Xubuntu package
 - Confirm the touchegg daemon is running with `systemctl status touchegg`
 - Run `touchegg --verbose` to confirm that a touchegg process is able to attach to the daemon, and see if gestures are detected in stdout.
 
+<a name="lid-close-recovery"></a>
 ### 8.10 My mouse is moving but everything is unresponsive
-This will happen if you close your lid before suspending or shutting down. The recommended action is to open another tty session using Ctrl+Alt+top-row-key (from top-row left arrow to Brightness Up - I think Brightness Up (tty7) is usually the graphical one but have not confirmed), then logging in with your credentials, and calling `sudo reboot`. Programs that were in a recoverable state should be able to terminate gracefully this way.
+This will happen if you close your lid before suspending or shutting down. The easiest but less safe thing to do is a hard shutdown by holding down the power button. However, it's pretty easy to do a safer shutdown/reboot, which will give your programs an opportunity to close gracefully (if they can):
 
-If you *really* want to do more to save some work, you can:
+1. Go to a different tty terminal.
+2. - Press `Ctrl+Alt+Refresh Key`
+   - If that does not work, press `Ctrl+Alt+FullScreen Key`.
+3. You should be in a full screen terminal now. Login with your usual credentials.
+4. Call `sudo shutdown` or `sudo reboot`.
 
-1. For a headless application, you should be able to access it normally on the new tty session.
-2. If you are OK with all your windows closing (i.e. non-UI background processes doing jobs that can handle UI restarts), `sudo systemctl restart lightdm` will very possible do the trick, starting a new lightdm, possibly in a different tty than the original.
-   - You should probably restart at your earliest opportunity. The lid closing and the restart of lightdm could both cause issues down the line.
-3. If you were running UI applications that have Xfce session state saving logic, you may be able to trigger saving those states. However, most applications probably don't support this, those that can might not in your specific Xubuntu build, and those that do most likely limit it to non-essential information like window positioning. But if you happen to KNOW your super-important application supports this (e.g. you regularly save your session on logout already), I have included a recovery script that walks you through doing this. It is in the repo under `project-root/.nautilus-unresponsive-screen-recovery/save_logout_restart.sh`. You can make it executable and run it, or alternatively read it and execute the commands in your terminal. It's a pretty simple process.
-   - Note that your new lightdm process might not be opening in the same tty, which is probably fine but could cause weirdness. You could do a little more work to ensure you start in the correct tty.
-   - You should reboot as soon as you can. This process is only meant for an extreme case of trying to save something very important, and, frankly, it is very unlikely to work any better than just rebooting.
+#### Advanced recovery for also saving Xfce session
+
+If saving your Xfce session doesn't mean anything to you, you probably can ignore this section. From the new tty terminal you entered in step 2, you could alternatively tell your frozen session to logout before the reboot, which would trigger an Xfce session save if that option is persistently enabled for you. If it is not, you could also set it via terminal and then do the logout.
+
+To log out your session, most likely this command will work:
+
+	DISPLAY=:0 xfce4-session-logout --logout
+
+To enable session saving first:
+
+	xfconf-query -c xfce4-session -p /general/SaveOnExit -s true
+
+#### Even more advanced
+
+Given that you are in a terminal session now, you should be able to access headless or headless components of applications you were running before. If you still need to access those applications, I am going to assume that you have enough experience to probably figure it out yourself from the new tty session.
+
+A simple note, running `sudo systemctl restart lightdm` has appeared to work in restarting the display, if you want to have your display back.
+
+I would still recommend rebooting at your earliest convenience, as I am not sure what other issues the lid closing could have caused, and restarting lightdm could probably also cause some weirdness.
 
 ### 8.11 Notable Debugging Tools/Commands
 
