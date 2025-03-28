@@ -633,11 +633,13 @@ For all but touchegg, you should be able to just use the default Xubuntu package
 
 <a name="lid-close-recovery"></a>
 ### 8.10 My mouse is moving but everything is unresponsive
-This will happen if you close your lid before suspending or shutting down. The easiest but less safe thing to do is a hard shutdown by holding down the power button. However, it's pretty easy to do a safer shutdown/reboot, which will give your programs an opportunity to close gracefully (if they can):
+This will happen if you close your lid before suspending or shutting down. The easiest but less safe thing to do is a hard shutdown by holding down the power button. However, it's pretty easy to do a safer shutdown/reboot, which will give your programs an opportunity to close gracefully (if they can), potentially triggering some auto-recovery features like in open documents with unsaved changes:
 
 1. Go to a different tty terminal.
    - Press `Ctrl+Alt+Refresh Key`
    - If that does not work, press `Ctrl+Alt+FullScreen Key`.
+   - If neither of those worked, then either 1) your issue is unrelated to the lid closing problem or 2) the lid closing caused more problems than expected.
+     - If (2), I would be curious to know this. Start an issue describing what happened, if you are so inclined.
 2. You should be in a full screen terminal now. Login with your usual credentials.
 3. Call `sudo shutdown` or `sudo reboot`.
 
@@ -651,17 +653,17 @@ To log out your session, most likely this command will work:
 
 	DISPLAY=:0 xfce4-session-logout --logout
 
-If that doesn't work for some reason, it is probably because your frozen sessions display is not `:0`. **This is pretty unusual**, but could be the case if you had multiple display sessions going on your machine (this would have be a pretty intentional thing on your part). But if that is the case for whatever reason, you can figure out which display you are logged in on with a command such as `ps aux | grep Xorg | grep -v grep`. Look for something like `Xorg :<number> vt<other-number>`, and your display is `:<number>`. Run the command with `:<number>` instead of `:0`.
+If that doesn't work, it may be that your frozen sessions display is not `:0`. **This is pretty unusual**, but would be the case if you had multiple display sessions going on your machine (that would have be a pretty intentional thing on your part). You can figure out which display you are logged in on with a command such as `ps aux | grep Xorg | grep -v grep`. Determine which row is the session that crashed (most likely there will be only one row), and the display is indicated with something like `Xorg :<number> vt<other-number>`; your display is `:<number>`. Run the command with `:<number>` instead of `:0`.
 
 To enable session saving before triggering the logout:
 
 	xfconf-query -c xfce4-session -p /general/SaveOnExit -s true
 
-From here, the recommended action is still to shutdown or reboot, but your window session will have been saved. In my experience so far, not many applications actually support window session saving, so I am assuming that you would only do this if you happen to heavily use this feature already and know from past experience that many of your applications support this feature. 
+From here, the recommended action is still to shutdown or reboot, but your window session will have been saved. In my experience so far, not many applications actually support Xfce window session saving on this Xubuntu version on Nautilus, so I am assuming that you would only do this if you happen to heavily use this feature already and know from past experience that many of your applications support this feature. 
 
-#### Even more advanced, if you were doing something really important that has headless components you want to try to recover/continue
+#### Even more advanced, if you were doing something really important that has headless components/engagement options you want to try to recover/continue from
 
-Given that you are in a terminal session now, you should be able to access headless or headless components of applications you were running before, and engage with them through command-line the same way you would otherwise.
+Given that you are in a terminal session now, you should be able to access headless or headless components of applications you were running before, and engage with them through command-line the same way you would otherwise. If this applies to you, I am going to assume you have the skills to attempt your own recovery from here. Headless applications very possibly did not crash, so you could query their status and work from that.
 
 A simple note, running `sudo systemctl restart lightdm` has worked in restarting the display, if you want to simply have your display back and attempt a GUI-based recovery.
 
