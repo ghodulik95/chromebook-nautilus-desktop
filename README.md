@@ -424,6 +424,14 @@ Or do this in **Keyboard > Application Shortcuts**. Feel free to modify the keym
 
 > **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy. Because the webcam device id can change across boots, applications might not operate consistently (more on that in [webcam notes](#webcam-notes)).
 
+### 6.11 Fix onboard onscreen keyboard to prepare for tablet mode use
+The on-screen keyboard onboard should come with your Xubuntu install. However, for me it did not work correctly without first calling 
+
+	`gsettings set org.onboard.keyboard input-event-source 'GTK'`
+
+That should fix it. Now you can open Onboard as needed for tablet mode typing.
+
+
 ### 6.11. Log out and back in, or reboot.
 
 Confirm everything is working:
