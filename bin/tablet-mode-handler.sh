@@ -55,7 +55,7 @@ libinput debug-events --device "$SWITCH_DEVICE" > "$PIPE_PATH" &
 LIBINPUT_PID=$!
 
 # Start monitoring for switch events
-libinput debug-events --device "$SWITCH_DEVICE" | while read -r line; do
+while read -r line; do
     if echo "$line" | grep -q 'switch tablet-mode state 1'; then
         echo "Tablet mode ON - disabling keyboard (id $KEYBOARD_ID)"
         xinput disable "$KEYBOARD_ID"
