@@ -36,8 +36,26 @@ fi
 echo "Listening for tablet mode events on $SWITCH_DEVICE..."
 echo "Keyboard ID is $KEYBOARD_ID"
 
+PIPE_PATH="/tmp/tabletmode.pipe"
+
+# Ensure cleanup on logout/shutdown/CTRL+C
+cleanup() {
+    echo "Stopping tablet mode monitor"
+    kill "$LIBINPUT_PID" 2>/dev/null
+    rm -f "$PIPE_PATH"
+    exit
+}
+trap cleanup SIGINT SIGTERM
+
+# Ensure named pipe exists
+[ -p "$PIPE_PATH" ] || mkfifo "$PIPE_PATH"
+
+# Start libinput in background, writing to the named pipe
+libinput debug-events --device "$SWITCH_DEVICE" > "$PIPE_PATH" &
+LIBINPUT_PID=$!
+
 # Start monitoring for switch events
-libinput debug-events --device "$SWITCH_DEVICE" | while read -r line; do
+while read -r line; do
     if echo "$line" | grep -q 'switch tablet-mode state 1'; then
         echo "Tablet mode ON - disabling keyboard (id $KEYBOARD_ID)"
         xinput disable "$KEYBOARD_ID"
@@ -47,4 +65,4 @@ libinput debug-events --device "$SWITCH_DEVICE" | while read -r line; do
         xinput enable "$KEYBOARD_ID"
         notify-send -u low "Tablet Mode" "OFF – Keyboard enabled"
     fi
-done
+done < "$PIPE_PATH"
