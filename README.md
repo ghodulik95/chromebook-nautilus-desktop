@@ -458,6 +458,106 @@ Confirm everything is working:
 4. Touchégg has a lot more potential use for more complex swipe navigation. I only include rules for 3-finger swiping for back/forward/refresh/maximize/minimize and 2-finger pinch-to-zoom (note that maximize, minimize and pinch-to-zoom were provided by the default config). Modications can be made to `~/.config/touchegg/touchegg.conf`.
 5. Pretty much any other Xubuntu/Xfce configurations you want.
 
+Absolutely! Here's a clean and structured **`README.md`**-style document summarizing your full SD card expansion process for Xubuntu:
+
+---
+
+### 6.13 Expanding Xubuntu Storage with a microSD Card
+
+This is entirely optional and unnecessary if you plan to use your Nautilus only for web browsing. But, if you plan to install a lot of applications, it is probably necessary for you to expand beyond the Nautilus's native storage. This guide walks you through how to **use a microSD card to expand storage on a Xubuntu system**. It includes steps for formatting, mounting, and moving large folders like app caches and Steam game data. You will need a microSD card (recommended at least 64GB but ideally more if you are wanting to install a lot of apps).
+
+#### Step 1: Insert and format the microSD as ext4
+
+> ⚠️ This will erase all data on the SD card.
+
+1. **Unmount the microSD (if auto-mounted)**:
+   ```bash
+   udisksctl unmount -b /dev/mmcblk0p1
+   ```
+
+2. **Format to ext4**:
+   ```bash
+   sudo mkfs.ext4 -L microsd /dev/mmcblk0p1
+   ```
+
+#### Step 2: Set Up Persistent Mount
+
+1. **Create a mount point**:
+   ```bash
+   sudo mkdir -p /mnt/microsd
+   sudo chown $USER:$USER /mnt/microsd
+   ```
+
+2. **Find the UUID of the microSD**:
+   ```bash
+   sudo blkid /dev/mmcblk0p1
+   ```
+
+3. **Add it to `/etc/fstab`**:
+   Open the file:
+   ```bash
+   sudo nano /etc/fstab
+   ```
+   Add the following line (replace with your UUID):
+   ```
+   UUID=your-uuid-here /mnt/microsd ext4 defaults,noatime 0 2
+   ```
+
+4. **Apply the mount**:
+   ```bash
+   sudo mount -a
+   sudo systemctl daemon-reload
+   ```
+
+### Step 3: Move Application Cache to SD
+
+1. **Create a new cache location**:
+   ```bash
+   mkdir -p /mnt/microsd/cache
+   ```
+
+2. **Move your current `.cache` directory**:
+   ```bash
+   mv ~/.cache/* /mnt/microsd/cache/
+   rm -r ~/.cache
+   ln -s /mnt/microsd/cache ~/.cache
+   ```
+
+### Step 4: Move Steam (Snap) Game Data to SD
+
+> ⚠️ This assumes you installed Steam with Snap and will not apply to other install methods.
+
+1. **Create a new Steam directory**:
+   ```bash
+   mkdir -p /mnt/microsd/steam-snap/.local
+   ```
+
+2. **Move Snap Steam data**:
+   ```bash
+   mv ~/snap/steam/common/.local /mnt/microsd/steam-snap/
+   ```
+
+3. **Symlink it back**:
+   ```bash
+   ln -s /mnt/microsd/steam-snap/.local ~/snap/steam/common/.local
+   ```
+
+#### Step 5: Verify and Clean Up
+
+- Launch Steam and confirm your games are detected and working.
+- If everything looks good, optionally remove backups:
+  ```bash
+  rm -rf ~/snap/steam/common/.local.bak
+  ```
+
+#### Further Ideas
+
+- Move additional heavy folders (e.g. `~/.npm`, `~/.cargo`, `~/.local/share`) the same way
+- Use the SD card for `/opt` or Flatpak installations
+- Create a startup check to verify SD card is mounted before launching apps that depend on it
+
+---
+
 <a name="project-file-overview"></a>
 ## 7. Project File Overview
 
