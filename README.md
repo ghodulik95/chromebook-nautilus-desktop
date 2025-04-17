@@ -211,11 +211,13 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
 
     	chmod +x ~/bin/tablet-mode-handler.sh
     	chmod +x ~/bin/toggle-headset-mode.sh
-   		chmod +x ~/bin/detect-webcam.sh
-   		chmod +x ~/bin/gesture-flash.sh
+        chmod +x ~/bin/detect-webcam.sh
+        chmod +x ~/bin/gesture-flash.sh
+        chmod +x ~/bin/toggle-flip.sh
 
+   Consider adding keyboard shortcuts for `toggle-headset-mode.sh` (toggle between voicecall and high-quality audio modes) and `toggle-flip.sh` (flip screen and touchpad for "tent" mode for "flat-open" display mode.)
 
-6. **Enable Passwordless Sudo**  
+7. **Enable Passwordless Sudo**  
    - Add entries in `sudo visudo` to allow the tablet-mode script and brightnessctl package to run without password prompts.
 
 6. **Reboot & Validate**  
@@ -392,6 +394,7 @@ You can see a deeper breakdown in [Section 7](#project-file-overview). The autos
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
     chmod +x ~/bin/gesture-flash.sh
+    chmod +x ~/bin/toggle-flip.sh
 
 *For a tabular breakdown of what these scripts do, see [this table in section 7](#tabular)*
 
@@ -413,7 +416,7 @@ Then add lines like (replacing your-username 3 times with your username):
     your-username ALL=(ALL) NOPASSWD: /home/your-username/bin/tablet-mode-handler.sh
     your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
 
-### 6.10. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle
+### 6.10. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle and Screen flipping
 
     xfconf-query \
       -c xfce4-keyboard-shortcuts \
@@ -423,6 +426,8 @@ Then add lines like (replacing your-username 3 times with your username):
 Or do this in **Keyboard > Application Shortcuts**. Feel free to modify the keymapping in the command or in the GUI if you do not want to use Ctrl+Alt+H.
 
 > **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy. Because the webcam device id can change across boots, applications might not operate consistently (more on that in [webcam notes](#webcam-notes)).
+
+Similarly, consider adding a keyboad shortcut to flip the screen with `bin/toggle-flip.sh`. This command will flip the display screen, including transforming the touchscreen input accordingly. This is not automatically toggled by flipping into tablet mode, as it is assumed you only want this if you are putting the Nautilus into "tent" mode (standing in a triangle shape), or perhaps if displaying the screen by putting it horizontal. If you plan to use tent mode at all, having easy access to this script is very helpful.
 
 ### 6.11 Fix onboard onscreen keyboard to prepare for tablet mode use
 The on-screen keyboard onboard should come with your Xubuntu install. However, for me it did not work correctly without first calling 
@@ -607,6 +612,8 @@ All the copied files in `~/` after installation serve different roles, but they 
    	 - Creates quick fading back/forward/refresh animations 
    - **`detect-webcam.sh`**  
      - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled by default) `webcam-link.desktop`.
+   - **`toggle-flip.sh`**  
+     - Vertically flips the laptop screen and sets the touchscreen input to transform accordingly.
 
 <a href="tabular"></a>
 ### 7.2 Tabular summary of scripts and config files
@@ -614,6 +621,7 @@ All the copied files in `~/` after installation serve different roles, but they 
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | `~/.config/autostart/Tablet Mode Toggle.desktop`        | Launches `~/bin/tablet-mode-handler.sh` at login to auto-enable/disable the keyboard in tablet mode.                                | Required for seamless tablet-mode functionality                          |
 | `~/bin/tablet-mode-handler.sh`                          | Detects tablet folding events (via libinput) and toggles the keyboard on/off automatically.                                         | Required for seamless tablet-mode functionality                         |
+| `~/.bin/toggle-flip.sh`               | Vertically flips screen and touchscreen input                                             | Optional — recommended if you use tent-mode of flat presentation mode  |
 | `~/.config/autostart/XModMap.desktop`                   | Applies `.config/keyboardmapping/.Xmodmap` for Chromebook-like top-row keys (Back, Refresh, Volume, etc.).                          | Required for full Chromebook-like key behavior                         |
 | `~/.config/keyboardmapping/.Xmodmap`                    | Remaps F-row keys to Chromebook equivalents, including making the "lock" key act as Delete.                                         | Required for full Chromebook-like key behavior                         |
 | `~/.xbindkeysrc`                                        | Handles brightness, screenshot, and other bindings that Xmodmap alone doesn’t cover. This is the default xbindkeys config filepath.                                                | Required for full Chromebook-like key behavior                         |
@@ -777,7 +785,7 @@ A simple note, running `sudo systemctl restart lightdm` has worked in restarting
 
 While you could operate as normal from there, I would still recommend rebooting at your earliest convenience; I am not sure what other issues the lid closing could have caused, and restarting lightdm could probably also cause some unexpected behavior.
 
-### 8.11 Notable Debugging Tools/Commands
+### 8.12 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
