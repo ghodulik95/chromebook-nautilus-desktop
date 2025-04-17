@@ -211,14 +211,16 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
 
     	chmod +x ~/bin/tablet-mode-handler.sh
     	chmod +x ~/bin/toggle-headset-mode.sh
-   		chmod +x ~/bin/detect-webcam.sh
-   		chmod +x ~/bin/gesture-flash.sh
+        chmod +x ~/bin/detect-webcam.sh
+        chmod +x ~/bin/gesture-flash.sh
+        chmod +x ~/bin/toggle-flip.sh
 
+   Consider adding keyboard shortcuts for `toggle-headset-mode.sh` (toggle between voicecall and high-quality audio modes) and `toggle-flip.sh` (flip screen and touchpad for "tent" mode for "flat-open" display mode.)
 
 6. **Enable Passwordless Sudo**  
    - Add entries in `sudo visudo` to allow the tablet-mode script and brightnessctl package to run without password prompts.
 
-6. **Reboot & Validate**  
+7. **Reboot & Validate**  
    - Flip the screen to test tablet-mode.  
    - Confirm the top-row keys work as expected.  
    - Test gestures, brightness, and Bluetooth audio if you configured them.  
@@ -392,6 +394,7 @@ You can see a deeper breakdown in [Section 7](#project-file-overview). The autos
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
     chmod +x ~/bin/gesture-flash.sh
+    chmod +x ~/bin/toggle-flip.sh
 
 *For a tabular breakdown of what these scripts do, see [this table in section 7](#tabular)*
 
@@ -413,7 +416,7 @@ Then add lines like (replacing your-username 3 times with your username):
     your-username ALL=(ALL) NOPASSWD: /home/your-username/bin/tablet-mode-handler.sh
     your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
 
-### 6.10. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle
+### 6.10. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle and Screen flipping
 
     xfconf-query \
       -c xfce4-keyboard-shortcuts \
@@ -424,6 +427,8 @@ Or do this in **Keyboard > Application Shortcuts**. Feel free to modify the keym
 
 > **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy. Because the webcam device id can change across boots, applications might not operate consistently (more on that in [webcam notes](#webcam-notes)).
 
+Similarly, consider adding a keyboad shortcut to flip the screen with `bin/toggle-flip.sh`. This command will flip the display screen, including transforming the touchscreen input accordingly. This is not automatically toggled by flipping into tablet mode, as it is assumed you only want this if you are putting the Nautilus into "tent" mode (standing in a triangle shape), or perhaps if displaying the screen by putting it horizontal. If you plan to use tent mode at all, having easy access to this script is very helpful.
+
 ### 6.11 Fix onboard onscreen keyboard to prepare for tablet mode use
 The on-screen keyboard onboard should come with your Xubuntu install. However, for me it did not work correctly without first calling 
 
@@ -432,7 +437,7 @@ The on-screen keyboard onboard should come with your Xubuntu install. However, f
 That should fix it. Now you can open Onboard as needed for tablet mode typing.
 
 
-### 6.11. Log out and back in, or reboot.
+### 6.12. Log out and back in, or reboot.
 
 Confirm everything is working:
 
@@ -449,7 +454,7 @@ Confirm everything is working:
 8. Confirm tap-to-click, 2-finger tap right-click, and 2-finger natural scrolling works.
 9. All set. Hoorah!
 
-### 6.12. Other desktop configurations to consider.
+### 6.13. Other desktop configurations to consider.
 
 1. Window snapping on screen edge *should* already be enabled, although I found it pretty difficult to activate without tap-to-click enabled via step 6.2. If for some reason it is not enabled, the setting is in Window Manager Tweaks > Accessibility. I think this requires display compositing, which should also be enabled, but if it is not, the setting is in Window Manager Tweaks > Compositor.
 	- You might want to enable Window snapping to other windows in Window Manager > Advanced.
@@ -462,7 +467,7 @@ Absolutely! Here's a clean and structured **`README.md`**-style document summari
 
 ---
 
-### 6.13 Expanding Xubuntu Storage with a microSD Card
+### 6.14 Expanding Xubuntu Storage with a microSD Card
 
 This is entirely optional and unnecessary if you plan to use your Nautilus only for web browsing. But, if you plan to install a lot of applications, it is probably necessary for you to expand beyond the Nautilus's native storage. This guide walks you through how to **use a microSD card to expand storage on a Xubuntu system**. It includes steps for formatting, mounting, and moving large folders like app caches and Steam game data. You will need a microSD card (recommended at least 64GB but ideally more if you are wanting to install a lot of apps).
 
@@ -607,6 +612,8 @@ All the copied files in `~/` after installation serve different roles, but they 
    	 - Creates quick fading back/forward/refresh animations 
    - **`detect-webcam.sh`**  
      - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled by default) `webcam-link.desktop`.
+   - **`toggle-flip.sh`**  
+     - Vertically flips the laptop screen and sets the touchscreen input to transform accordingly.
 
 <a href="tabular"></a>
 ### 7.2 Tabular summary of scripts and config files
@@ -614,6 +621,7 @@ All the copied files in `~/` after installation serve different roles, but they 
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | `~/.config/autostart/Tablet Mode Toggle.desktop`        | Launches `~/bin/tablet-mode-handler.sh` at login to auto-enable/disable the keyboard in tablet mode.                                | Required for seamless tablet-mode functionality                          |
 | `~/bin/tablet-mode-handler.sh`                          | Detects tablet folding events (via libinput) and toggles the keyboard on/off automatically.                                         | Required for seamless tablet-mode functionality                         |
+| `~/.bin/toggle-flip.sh`               | Vertically flips screen and touchscreen input                                             | Optional — recommended if you use tent-mode of flat presentation mode  |
 | `~/.config/autostart/XModMap.desktop`                   | Applies `.config/keyboardmapping/.Xmodmap` for Chromebook-like top-row keys (Back, Refresh, Volume, etc.).                          | Required for full Chromebook-like key behavior                         |
 | `~/.config/keyboardmapping/.Xmodmap`                    | Remaps F-row keys to Chromebook equivalents, including making the "lock" key act as Delete.                                         | Required for full Chromebook-like key behavior                         |
 | `~/.xbindkeysrc`                                        | Handles brightness, screenshot, and other bindings that Xmodmap alone doesn’t cover. This is the default xbindkeys config filepath.                                                | Required for full Chromebook-like key behavior                         |
@@ -777,7 +785,14 @@ A simple note, running `sudo systemctl restart lightdm` has worked in restarting
 
 While you could operate as normal from there, I would still recommend rebooting at your earliest convenience; I am not sure what other issues the lid closing could have caused, and restarting lightdm could probably also cause some unexpected behavior.
 
-### 8.11 Notable Debugging Tools/Commands
+### 8.11 Vertical screen flip script (`toggle-flip.sh`) is not working
+
+Most likely, the device id of your touchscreen is too dissimilar to the regex in the script. This could happen if your model or purchasing region varies too much from mine (I preseume - I don't really know how manufacturing works in this regard), or if you are using this project on a non-Nautilus for some reason (why are you doing that? I'd actually be very curious to know.)
+
+Run the script directly in terminal. If that was the issue, you should see an error message that walks
+you through fixing it locally.
+
+### 8.12 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
