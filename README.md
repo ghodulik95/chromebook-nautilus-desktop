@@ -785,7 +785,14 @@ A simple note, running `sudo systemctl restart lightdm` has worked in restarting
 
 While you could operate as normal from there, I would still recommend rebooting at your earliest convenience; I am not sure what other issues the lid closing could have caused, and restarting lightdm could probably also cause some unexpected behavior.
 
-### 8.12 Notable Debugging Tools/Commands
+### 8.12 Vertical screen flip script (`toggle-flip.sh`) is not working
+
+Most likely, the device id of your touchscreen is too dissimilar to the regex in the script. This could happen if your model or purchasing region varies too much from mine (I preseume - I don't really know how manufacturing works in this regard), or if you are using this project on a non-Nautilus for some reason (why are you doing that? I'd actually be very curious to know.)
+
+Run the script directly in terminal. If that was the issue, you should see an error message that walks
+you through fixing it locally.
+
+### 8.13 Notable Debugging Tools/Commands
 
 - **showkey**, **xev**, **xbindkeys -v**  
   - For debugging keycodes and verifying your mappings.
