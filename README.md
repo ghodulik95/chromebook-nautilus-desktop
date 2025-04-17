@@ -217,10 +217,10 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
 
    Consider adding keyboard shortcuts for `toggle-headset-mode.sh` (toggle between voicecall and high-quality audio modes) and `toggle-flip.sh` (flip screen and touchpad for "tent" mode for "flat-open" display mode.)
 
-7. **Enable Passwordless Sudo**  
+6. **Enable Passwordless Sudo**  
    - Add entries in `sudo visudo` to allow the tablet-mode script and brightnessctl package to run without password prompts.
 
-6. **Reboot & Validate**  
+7. **Reboot & Validate**  
    - Flip the screen to test tablet-mode.  
    - Confirm the top-row keys work as expected.  
    - Test gestures, brightness, and Bluetooth audio if you configured them.  
@@ -437,7 +437,7 @@ The on-screen keyboard onboard should come with your Xubuntu install. However, f
 That should fix it. Now you can open Onboard as needed for tablet mode typing.
 
 
-### 6.11. Log out and back in, or reboot.
+### 6.12. Log out and back in, or reboot.
 
 Confirm everything is working:
 
@@ -454,7 +454,7 @@ Confirm everything is working:
 8. Confirm tap-to-click, 2-finger tap right-click, and 2-finger natural scrolling works.
 9. All set. Hoorah!
 
-### 6.12. Other desktop configurations to consider.
+### 6.13. Other desktop configurations to consider.
 
 1. Window snapping on screen edge *should* already be enabled, although I found it pretty difficult to activate without tap-to-click enabled via step 6.2. If for some reason it is not enabled, the setting is in Window Manager Tweaks > Accessibility. I think this requires display compositing, which should also be enabled, but if it is not, the setting is in Window Manager Tweaks > Compositor.
 	- You might want to enable Window snapping to other windows in Window Manager > Advanced.
@@ -467,7 +467,7 @@ Absolutely! Here's a clean and structured **`README.md`**-style document summari
 
 ---
 
-### 6.13 Expanding Xubuntu Storage with a microSD Card
+### 6.14 Expanding Xubuntu Storage with a microSD Card
 
 This is entirely optional and unnecessary if you plan to use your Nautilus only for web browsing. But, if you plan to install a lot of applications, it is probably necessary for you to expand beyond the Nautilus's native storage. This guide walks you through how to **use a microSD card to expand storage on a Xubuntu system**. It includes steps for formatting, mounting, and moving large folders like app caches and Steam game data. You will need a microSD card (recommended at least 64GB but ideally more if you are wanting to install a lot of apps).
 
