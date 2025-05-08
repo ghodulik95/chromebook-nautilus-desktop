@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# From Chromebook Nautilus Desktop project: https://github.com/ghodulik95/chromebook-nautilus-desktop
+# This project is not affiliated or endorsed by Google or Samsung
+
+# Detects touchscreen and primary display.
+# Cycles between normal, left, and right to allow for portrait mode.
+# Touchscreen input changes to reflect new orientation.
+# Not tested when external monitors are connected.
+
 # === CONFIGURATION ===
 TOUCH_MATCH='SYTS|06CB'
 touch_id=$(xinput list | grep -iE "$TOUCH_MATCH" | head -n1 | grep -oP 'id=\K\d+')
