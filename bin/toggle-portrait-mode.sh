@@ -6,7 +6,8 @@
 # Detects touchscreen and primary display.
 # Cycles between normal, left, and right to allow for portrait mode.
 # Touchscreen input changes to reflect new orientation.
-# Not tested when external monitors are connected.
+# Using with external displays connected seems to mostly work, but can sometimes
+# cause the touchscreen to behave unexpectedly.
 
 # === CONFIGURATION ===
 TOUCH_MATCH='SYTS|06CB'
@@ -23,6 +24,13 @@ fi
 
 # === GET PRIMARY DISPLAY ===
 output=$(xrandr | awk '/ connected primary/ {print $1}')
+
+# === CHECK FOR EXTERNAL DISPLAY ===
+external_display_count=$(xrandr | grep ' connected' | grep -v "$output" | wc -l)
+if (( external_display_count > 0 )); then
+    echo "⚠️ External display detected. Touchscreen may misbehave."
+    notify-send "Screen rotation warning: External display detected" "This could cause the touchscreen to misbehave." -u normal
+fi
 
 # === GET CURRENT ROTATION ===
 rotation=$(xrandr | grep "$output connected" | grep -oP '\S+\s(?=\()' | awk '{print $1}')
@@ -51,4 +59,5 @@ esac
 echo "Rotating display: $rotation → $next_rotation"
 xrandr --output "$output" --rotate "$next_rotation"
 xinput set-prop "$touch_id" "Coordinate Transformation Matrix" $matrix
+xinput map-to-output "$touch_id" "$output"
 echo "Touchscreen matrix updated for $next_rotation orientation."
