@@ -128,6 +128,8 @@ This repository helps you keep some of the conveniences you had in ChromeOS:
 
 2. **Tablet Mode**  
    - Disables the keyboard automatically when the screen is folded into tablet position, then re-enables it afterward.
+   - Includes scripts for screen rotation, allowing for tablet tent-mode and portrait-mode.
+   - *Auto-rotation is not currently supported, but accelerometer sensor is confirmed to be working. So that may be added in the future.*
 
 3. **Swipe Navigation**  
    - Implements 3-finger swipes for browser back/forward/refresh (mimicking ChromeOS-style gestures), including cute hacky custom animations (that are easy to disable). 
@@ -213,14 +215,19 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
     	chmod +x ~/bin/toggle-headset-mode.sh
         chmod +x ~/bin/detect-webcam.sh
         chmod +x ~/bin/gesture-flash.sh
-        chmod +x ~/bin/toggle-flip.sh
+        chmod +x ~/bin/toggle-tent-mode.sh
+        chmod +x ~/bin/toggle-portrait-mode.sh
 
-   Consider adding keyboard shortcuts for `toggle-headset-mode.sh` (toggle between voicecall and high-quality audio modes) and `toggle-flip.sh` (flip screen and touchpad for "tent" mode for "flat-open" display mode.)
+   Consider adding keyboard shortcuts for
+   	
+	- `toggle-headset-mode.sh` (toggle between voicecall and high-quality audio modes)
+ 	- `toggle-tent-mode.sh` (flip screen and touchpad for "tent" mode for "flat-open" display mode)
+  	- `toggle-portrait-mode.sh` (cyles between left/right portrait mode and normal mode)
 
-6. **Enable Passwordless Sudo**  
+7. **Enable Passwordless Sudo**  
    - Add entries in `sudo visudo` to allow the tablet-mode script and brightnessctl package to run without password prompts.
 
-7. **Reboot & Validate**  
+8. **Reboot & Validate**  
    - Flip the screen to test tablet-mode.  
    - Confirm the top-row keys work as expected.  
    - Test gestures, brightness, and Bluetooth audio if you configured them.  
@@ -394,7 +401,8 @@ You can see a deeper breakdown in [Section 7](#project-file-overview). The autos
     chmod +x ~/bin/toggle-headset-mode.sh
     chmod +x ~/bin/detect-webcam.sh
     chmod +x ~/bin/gesture-flash.sh
-    chmod +x ~/bin/toggle-flip.sh
+    chmod +x ~/bin/toggle-tent-mode.sh
+    chmod +x ~/bin/toggle-portrait-mode.sh
 
 *For a tabular breakdown of what these scripts do, see [this table in section 7](#tabular)*
 
@@ -416,7 +424,7 @@ Then add lines like (replacing your-username 3 times with your username):
     your-username ALL=(ALL) NOPASSWD: /home/your-username/bin/tablet-mode-handler.sh
     your-username ALL=(ALL) NOPASSWD: /usr/bin/brightnessctl
 
-### 6.10. (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle and Screen flipping
+### 6.10.1 (Optional, but Recommended if you'll be making video calls) Add Keyboard Shortcut for Bluetooth Headset Toggle
 
     xfconf-query \
       -c xfce4-keyboard-shortcuts \
@@ -427,14 +435,16 @@ Or do this in **Keyboard > Application Shortcuts**. Feel free to modify the keym
 
 > **Note**: Some applications may automatically toggle your headphones into headset mode (mic enabled) without any manual intervention. However, if you plan to use headphones in video calls and don’t see an auto-toggle, this script plus a shortcut can be handy. Because the webcam device id can change across boots, applications might not operate consistently (more on that in [webcam notes](#webcam-notes)).
 
-Similarly, consider adding a keyboad shortcut to flip the screen with `bin/toggle-flip.sh`. This command will flip the display screen, including transforming the touchscreen input accordingly. This is not automatically toggled by flipping into tablet mode, as it is assumed you only want this if you are putting the Nautilus into "tent" mode (standing in a triangle shape), or perhaps if displaying the screen by putting it horizontal. If you plan to use tent mode at all, having easy access to this script is very helpful.
+### 6.10.2 Add Keyboard Shortcuts for Screen rotation in different tablet modes.
+
+Similarly, consider adding a keyboad shortcut to flip the screen with `bin/toggle-tent-mode.sh` and `bin/toggle-portrait-mode.sh`. The former command will flip the display screen and the latter will rotate the display screen, including transforming the touchscreen input accordingly. This is not automatically toggled by flipping into tablet mode, as it is assumed you only want this if you are putting the Nautilus into "tent" mode (standing in a triangle shape), if displaying the screen flat in a full 180, or using the display like a tablet in portrait mode. If you plan to use tent or portrait mode at all, having easy access to this script is very helpful.
 
 ### 6.11 Fix onboard onscreen keyboard to prepare for tablet mode use
 The on-screen keyboard onboard should come with your Xubuntu install. However, for me it did not work correctly without first calling 
 
 	`gsettings set org.onboard.keyboard input-event-source 'GTK'`
 
-That should fix it. Now you can open Onboard as needed for tablet mode typing.
+That should fix it. Now you can open Onboard as needed for tablet mode typing. I personally added it to my icon tray so that I can easily access it from a tablet mode.
 
 
 ### 6.12. Log out and back in, or reboot.
@@ -462,8 +472,6 @@ Confirm everything is working:
 3. Since I didn't have a use case for the Window manager key (right of the fullscreen key), I mapped this to do a fullscreen screenshot to clipboard. If you'd prefer a different mapping, modify `~/.xbindkeysrc`.
 4. Touchégg has a lot more potential use for more complex swipe navigation. I only include rules for 3-finger swiping for back/forward/refresh/maximize/minimize and 2-finger pinch-to-zoom (note that maximize, minimize and pinch-to-zoom were provided by the default config). Modications can be made to `~/.config/touchegg/touchegg.conf`.
 5. Pretty much any other Xubuntu/Xfce configurations you want.
-
-Absolutely! Here's a clean and structured **`README.md`**-style document summarizing your full SD card expansion process for Xubuntu:
 
 ---
 
@@ -612,8 +620,10 @@ All the copied files in `~/` after installation serve different roles, but they 
    	 - Creates quick fading back/forward/refresh animations 
    - **`detect-webcam.sh`**  
      - Creates a symlink `/dev/webcam` to your actual camera device (which can vary from boot to boot). Used by the (disabled by default) `webcam-link.desktop`.
-   - **`toggle-flip.sh`**  
+   - **`toggle-tent-mode.sh`**  
      - Vertically flips the laptop screen and sets the touchscreen input to transform accordingly.
+   - **`toggle-portrait-mode.sh`**  
+     - Rotates the laptop screen and sets the touchscreen input to transform accordingly. Cycles between left, right, and normal rotation.
 
 <a href="tabular"></a>
 ### 7.2 Tabular summary of scripts and config files
@@ -621,7 +631,8 @@ All the copied files in `~/` after installation serve different roles, but they 
 |---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | `~/.config/autostart/Tablet Mode Toggle.desktop`        | Launches `~/bin/tablet-mode-handler.sh` at login to auto-enable/disable the keyboard in tablet mode.                                | Required for seamless tablet-mode functionality                          |
 | `~/bin/tablet-mode-handler.sh`                          | Detects tablet folding events (via libinput) and toggles the keyboard on/off automatically.                                         | Required for seamless tablet-mode functionality                         |
-| `~/.bin/toggle-flip.sh`               | Vertically flips screen and touchscreen input                                             | Optional — recommended if you use tent-mode of flat presentation mode  |
+| `~/.bin/toggle-tent-mode.sh`               | Vertically flips screen and touchscreen input                                             | Optional — recommended if you use tent-mode of flat presentation mode  |
+| `~/.bin/toggle-portrait-mode.sh`               | Rotates screen and touchscreen input                                             | Optional — recommended if you use tablet mode in portrait orientation  |
 | `~/.config/autostart/XModMap.desktop`                   | Applies `.config/keyboardmapping/.Xmodmap` for Chromebook-like top-row keys (Back, Refresh, Volume, etc.).                          | Required for full Chromebook-like key behavior                         |
 | `~/.config/keyboardmapping/.Xmodmap`                    | Remaps F-row keys to Chromebook equivalents, including making the "lock" key act as Delete.                                         | Required for full Chromebook-like key behavior                         |
 | `~/.xbindkeysrc`                                        | Handles brightness, screenshot, and other bindings that Xmodmap alone doesn’t cover. This is the default xbindkeys config filepath.                                                | Required for full Chromebook-like key behavior                         |
@@ -654,7 +665,7 @@ Below are some issues you could run into.
 
     	brightnessctl s 50  
     	
-  If you can set brightness manually, your bindings or permissions may be misconfigured. *(The abpve command probably requires sudo.)*
+  If you can set brightness manually, your bindings or permissions may be misconfigured. *(The above command probably requires sudo.)*
 
 ### 8.2 Tablet Mode Doesn’t Disable the Keyboard
 
@@ -785,12 +796,18 @@ A simple note, running `sudo systemctl restart lightdm` has worked in restarting
 
 While you could operate as normal from there, I would still recommend rebooting at your earliest convenience; I am not sure what other issues the lid closing could have caused, and restarting lightdm could probably also cause some unexpected behavior.
 
-### 8.11 Vertical screen flip script (`toggle-flip.sh`) is not working
+### 8.11 Vertical screen flip script (`toggle-tent-mode.sh`) is not working
 
 Most likely, the device id of your touchscreen is too dissimilar to the regex in the script. This could happen if your model or purchasing region varies too much from mine (I preseume - I don't really know how manufacturing works in this regard), or if you are using this project on a non-Nautilus for some reason (why are you doing that? I'd actually be very curious to know.)
 
 Run the script directly in terminal. If that was the issue, you should see an error message that walks
 you through fixing it locally.
+
+### 8.12 Touchscreen is behaving strangely
+
+If you use the tent-mode or portrait-mode scripts while connected to or before connecting to an external display, this can cause the transformation of the touchscreen input to be incorrect. This would look like the cursor not correctly aligning with your finger on the touch screen, or the direction you slide your finger not aligning with the cursor.
+
+Running the tent-mode or portrait-mode scripts again until you are back into your desired orientation should fix the issue. If for some reason that does not work, a logout or reboot should work. If that does not work, then it is probably a different issue altogether.
 
 ### 8.12 Notable Debugging Tools/Commands
 
@@ -859,6 +876,8 @@ I can't remember specifically what worked and didn't, but most distros besides X
 - **Sleep-mode battery life**
   - Based on the extremely limited data of "I left my machine on sleep mode overnight once," the battery went down about 15% being suspended overnight.
   - Remember that if you want to enter sleep mode, do it **before closing the lid**, as this breaks stuff. Recovery options from this breakage described [here](#lid-close-recovery).
+- **External Displays**
+  - I have hooked this into a docking station and KVM switch, and it works great on the display port output. I have not yet tried multiple external displays.
 - **Miscellaneous**:  
   - Krita and Xournal++ seem to work great though for stylus drawing and note taking, including pressure-sensitivity and palm-rejection working out of the box. Much more smooth than the Android apps I was using most recently.
   - I tried OpenBoard, but had trouble getting dependencies to work.
