@@ -224,10 +224,10 @@ Here’s a high-level outline of the key setup steps. For more specific instruct
  	- `toggle-tent-mode.sh` (flip screen and touchpad for "tent" mode for "flat-open" display mode)
   	- `toggle-portrait-mode.sh` (cyles between left/right portrait mode and normal mode)
 
-7. **Enable Passwordless Sudo**  
+6. **Enable Passwordless Sudo**  
    - Add entries in `sudo visudo` to allow the tablet-mode script and brightnessctl package to run without password prompts.
 
-8. **Reboot & Validate**  
+7. **Reboot & Validate**  
    - Flip the screen to test tablet-mode.  
    - Confirm the top-row keys work as expected.  
    - Test gestures, brightness, and Bluetooth audio if you configured them.  
