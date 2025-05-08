@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# From Chromebook Nautilus Desktop project: https://github.com/ghodulik95/chromebook-nautilus-desktop
+# This project is not affiliated or endorsed by Google or Samsung
+
 # Detects touchscreen and primary display.
 # Flips primary display vertically and transforms
 # touchscreen input to reflect new orientation.
