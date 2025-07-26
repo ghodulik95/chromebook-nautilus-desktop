@@ -817,7 +817,125 @@ Running the tent-mode or portrait-mode scripts again until you are back into you
   - For seeing tablet-mode events and other hardware input.
 - **Touché** (`touchegg --debug`)  
   - For confirming multi-touch gesture detection.
+ 
+### 8.13 Kernel Panic
 
+Somehow your kernel is broken. Here's how to use the fallback kernel and then reinstall to fix:
+
+Kernel Recovery Process (via Live USB + SSH)
+
+#### 1. Boot into Live USB
+
+* Use a bootable Xubuntu Live USB.
+* Select "Try Xubuntu" (do not install)
+
+#### 2. Enable SSH on the Live USB (optional but recommended)
+
+On the Live USB terminal:
+
+```bash
+sudo apt update
+sudo apt install openssh-server
+sudo passwd xubuntu        # Set a password for SSH login
+sudo service ssh start
+```
+
+Find your IP address:
+
+```bash
+ip a
+```
+
+Then from another machine, connect:
+
+```bash
+ssh xubuntu@<your-ip>
+```
+
+#### 3. Mount the Installed System
+
+```bash
+sudo mkdir -p /mnt/root/boot/EFI
+sudo mount /dev/mmcblk1p2 /mnt/root          # root partition
+sudo mount /dev/mmcblk1p1 /mnt/root/boot/EFI # EFI partition
+
+# Bind virtual filesystems
+for dir in dev proc sys run; do
+  sudo mount --bind /$dir /mnt/root/$dir
+done
+```
+
+Sanity check:
+
+```bash
+ls /mnt/root
+ls /mnt/root/boot
+ls /mnt/root/boot/EFI
+```
+
+#### 4. Chroot into the System
+
+```bash
+sudo chroot /mnt/root
+```
+
+#### 5. Remove the Problematic Kernel
+
+Inside the chroot:
+
+```bash
+apt remove --purge linux-image-6.14.0-24-generic
+update-grub # May run automatically with apt
+```
+
+Sanity check:
+
+```bash
+grep menuentry /boot/grub/grub.cfg
+ls -lh /boot/vmlinuz-*
+```
+
+#### 6. Exit and Reboot into Working Kernel
+
+```bash
+exit
+sudo umount -R /mnt/root
+sudo reboot
+```
+
+After reboot:
+
+```bash
+uname -r  # Should be 6.11.0-29-generic or similar
+```
+
+#### 7. Reinstall the Latest Kernel the Correct Way
+
+Once in the real system:
+
+```bash
+sudo apt update
+sudo apt install --install-recommends linux-generic-hwe-24.04
+```
+
+Confirm:
+
+```bash
+ls -lh /boot/vmlinuz-6.14*
+grep menuentry /boot/grub/grub.cfg
+```
+
+Then reboot:
+
+```bash
+sudo reboot
+```
+
+After reboot:
+
+```bash
+uname -r  # Should now show 6.14.0-xx-generic
+```
 ---
 
 <a name="webcam-notes"></a>
